@@ -1,1 +1,8 @@
 *.un~
+*.pdf
+*.aux
+*.log
+*.swp
+step-40
+*.bbl
+*.blg
