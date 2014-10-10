@@ -13,6 +13,8 @@
 \usepackage{caption} % permet d'utiliser subcaption
 \usepackage{subcaption} % permet d'utiliser subfigure, subtable, etc
 \usepackage[margin=1.in]{geometry} % controle les marges du document
+\usepackage{algorithm}
+\usepackage{url}
 
 
 \newcommand\bn{\boldsymbol{\nabla}}
@@ -42,10 +44,10 @@
 % In the paper, they gave a weight of 1/3 instead of zero to the arcs between
 % two different processors.
 \section{Introduction}
-When using the discrete ordinates method \cite{} to discretize the transport equation,
-it is customary to sweep through mesh \cite{}. Sweeping through a mesh can be
-viewed as a resource-constrained project scheduling \cite{} (\red{talk more
-about that}). In \cite{Adams2013}, a family of optimal sweeping algorithms is
+When using the discrete ordinates method to discretize the transport equation,
+it is customary to sweep through mesh. Sweeping through a mesh can be
+viewed as a resource-constrained project scheduling problem (RCPSP) \cite{} (\red{talk more
+about that. Two good reviews, need more ?}). In \cite{Adams2013}, a family of optimal sweeping algorithms is
 described for regular grids. It is noticeable that such an important problem,
 has been solved only recently for regular grids. For unstructured grids, several
 algorithms have been proposed \cite{}. It is important to notice that the
@@ -59,23 +61,61 @@ accounted for. Here we will study a particular case of unstructured mesh namely
 adaptively refined mesh \cite{}. In this paper, we study the CAP-PFB algorithm
 introduced in \cite{Mo2014}. In particular, we will study how the algorithm
 behaves on regular grids and how it can modified for mesh constructed using
-adaptive mesh refinement (AMR). \red{Talk about deal.II and say that this is
-only preliminary results -> no deal.II}
+adaptive mesh refinement (AMR). This work will show some preliminary results on
+the performance of sweeps on meshes similar to the ones produced by deal.II
+\cite{Bangerth2007,Bangerth2013} and p4est \cite{Burstedde2011}. Deal.II is an 
+open source finite element library which uses p4est for the partitioning.
+
 
 \section{Parallel sweeps on AMR mesh}
 \subsection{CAP-PFB algorithm}
-In this section, we explain the CAP-PFB (\red{extend}) introduced in
+In this section, we explain the CAP-PFB (Cut Arc Prefence - Parallel Forward
+Backward) algorithm introduced in
 \cite{Mo2014}. The algorithm is based on the observation that when we try to
 start the tasks as soon as possible, we have a lot of work at the beginning but
 it trails off and to only few tasks later on. The opposite is true when we try
 to start the tasks as late as possible, we have few tasks at the beginning but a
-lot of work at the end. The idea of FP (\red{extend}) is to alternate forward
-and backward iteration to have a lot of work all the time and thus, decrease the
-time needed to execute all the tasks.
+lot of work at the end. The idea of FB iterations (\red{extend and cite Li}) is 
+to alternate forward and backward iterations to have a lot of work all the time 
+and thus, decrease the time needed to execute all the tasks. The algorithm works 
+as follow:
+\begin{algorithm}[H]
+  \caption{FB algorithm}
+  \begin{itemize}
+    \item Start with an initial scheduling.
+    \item Iterate until convergence or maximum number of steps:
+      \begin{enumerate}
+        \item Forward iteration:
+          \begin{enumerate}
+            \item Compute the ranks of the tasks
+            \item Sort the tasks in ascending order of the ranks.
+          \end{enumerate}
+        \item Backward iteration:
+          \begin{enumerate}
+            \item Compute the ranks of the tasks
+            \item Sort the tasks in descending order of the ranks.
+          \end{enumerate}
+      \end{enumerate}
+  \end{itemize}
+\end{algorithm}
+PFB is just the parallel version of FP. Different FB algorithms can be created
+using different ranking methods. Inverting the order of the backward and forward
+iteration allow to finish the FB iterations with a forward sweep. Different FB
+algorithms will differ by the method used to compute the ranks of the tasks. CAP
+uses the start time and the end time of the tasks which forms an arc between two
+processors. 
+\begin{itemize}
+  \item Backward iteration rank: earliest start time of all its downstream cut
+    arcs $\min_{(v_k,v_j)\in S_i}\left\{s_j-w_{k,j}\right\} \cup
+    \left\{+\infty\right\}$. Tied are broke using the own task start time.
+  \item Forward iteration rank: latest end time of all its upstream cut arcs
+    $\max_{(v_j,v_k)\in B_i} \left\{f_j+w_{j,k}\right\} \cup
+    \left\{-\infty\right\}$. Tied are broke using the own task end time.
+\end{itemize}
 \subsection{CAP-PFB on adapted mesh}
-In \cref{subdomain_id}, we show the partitioning of mesh using deal.II \cite{} and
-p4est \cite{} on 16 processors. This is a typical mesh produced by these
-libraries and it represents the case that we want to tackle. 
+In \cref{subdomain_id}, we show the partitioning of mesh using deal.II and p4est 
+on 16 processors. This is a typical mesh produced by these libraries and it 
+represents the case that we want to tackle. 
 \begin{figure}[H]
   \begin{subfigure}[b]{.5\textwidth}
     \centering
@@ -116,7 +156,7 @@ the first test, we compared the sweep ordering produced by CAP-PFB with the
 optimal solution. In the second test, we look at the ordering on an AMR mesh.
 \subsection{Uniform mesh}
 Uniform mesh $S_8$ (40 directions). Number of processors used: $10\times10=100$, 
-$30\times30=900$, $50\times50=2500$, and $70\times70=4900$. For each test, we 
+$30\times30=900$, and $50\times50=2500$. For each test, we 
 start with three different initial sweep ordering. From \cite{Adams2013}, we know
 that the optimal number of stages on a 2D mesh is:
 \begin{equation}
@@ -127,25 +167,24 @@ tasks that each processors has to executed (40 in this example). Because CAP-PFB
 is an heuristic that requires an initial scheduling, we use three different
 initial scheduling for each tests.
 
+% Order of results: no seed, seed = 0, seed = 1.
+% TODO: if enough time do 70 \times 70 it should be much faster now
 \begin{table}[H]
   \begin{center}
     \begin{tabular}{|c|c|c|c|c|}
       \hline
       N. procs & Init. n. stages & Final n. stages & Optimal n. stages & Iter. \\
       \hline
-      $10\times 10$ (no seed) &  580 &  56 &  56 & 1 \\
-      $10\times 10$ (seed=0)  &  155 &  56 &  56 & 2 \\
-      $10\times 10$ (seed=1)  &  153 &  56 &  56 & 1 \\
-      $30\times 30$ (no seed) & 1780 &  96 &  96 & 1 \\
-      $30\times 30$ (seed=0)  &  392 &  96 &  96 & 2 \\
-      $30\times 30$ (seed=1)  &  376 &  96 &  96 & 2 \\
-      $50\times 50$ (no seed) & 2980 & 136 & 136 & 1 \\
-      $50\times 50$ (seed=0)  &  570 & 136 & 136 & 2 \\ % much faster than no
+      $10\times 10$ &  580 &  56 &  56 & 1 \\
+      $10\times 10$ &  155 &  56 &  56 & 2 \\
+      $10\times 10$ &  153 &  56 &  56 & 1 \\
+      $30\times 30$ & 1780 &  96 &  96 & 1 \\
+      $30\times 30$ &  392 &  96 &  96 & 2 \\
+      $30\times 30$ &  376 &  96 &  96 & 2 \\
+      $50\times 50$ & 2980 & 136 & 136 & 1 \\
+      $50\times 50$ &  570 & 136 & 136 & 2 \\ % much faster than no
       % seed (less than one day instead of two)
-      $50\times 50$ (seed=1)  &  573 & 136 & 136 & 2 \\
-      $70\times 70$ (no seed) & & & 176 & \\
-      $70\times 70$ (seed=0)  & & & 176 & \\
-      $70\times 70$ (seed=1)  & & & 176 & \\
+      $50\times 50$ &  573 & 136 & 136 & 2 \\
       \hline
     \end{tabular}
   \end{center}
@@ -158,6 +197,64 @@ heuristic converges to the optimal solution in only one or two iterations for
 every initial scheduling.
 
 \subsection{AMR mesh}
+4 cells by procs + S8 = 160 tasks per procs
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5cm]{mesh}
+  \caption{Mesh.}
+\end{figure}
+
+% Order of results: no seed, seed = 0, seed = 1.
+% Table for amr_0 = refined mesh in the middle have NOT been gather
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      N.procs & Init. n. stages & Final n. stages & Iter. \\
+      \hline
+      148 & 1870 & 238 & 2 \\
+      148 &  911 & 247 & 3 \\
+      148 &  923 & 246 & 3 \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+% Order of results: no seed, seed = 0, seed = 1.
+% Table for amr_1 and amr_3 = refined mesh in the middle have been gather
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      N.procs & Init. n. stages & Final n. stages & Iter. \\
+      \hline
+      148 & 2760 & 238 & 3 \\
+      148 & 804  & 250 & 2 \\
+      148 & 788  & 244 & 4 \\
+      592 & 5520 & 380 & 1 \\
+      592 & 1402 & 381 & 6 \\
+      592 & 1364 & 386 & 2 \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+\begin{itemize}
+  \item For the third test, monotonic convergence is broken. The backward
+    schedule at the fifth iteration takes a longer time that the forward
+    schedule at the fourth iteration. The forward schedule at the end of the
+    fifth iteration is the same as the one at the end of the fourth iteration.
+  \item For the fifth test, monotonic convergence is broken. Lots of
+    oscillations between 381 and 385 stages starting at the third iterations.
+  \item Fort the sixth test, the minimum is reached during the backward
+    scheduling of the second iteration. After that the number of stages
+    oscillates between 387 and 392 stages.
+\end{itemize}
+Even if there is oscillation, it is not too far from the minimum and the
+schedule given after a few iterations is close to the best solution. We also
+notice that the final number of stages depends on the initial scheduling unlike
+the uniform case.
+
 
 \subsection{AMR with discontinuous partitioning}
 
