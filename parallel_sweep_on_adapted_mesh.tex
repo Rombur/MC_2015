@@ -36,7 +36,7 @@
 
 
 \begin{document}
-\title{Parallel Sweep on Adapted Mesh}
+\title{Parallel $S_n$ Sweeps on Adapted Mesh}
 \author{Bruno Turcksin} 
 \date{}
 \maketitle
@@ -45,39 +45,52 @@
 % two different processors.
 \section{Introduction}
 When using the discrete ordinates method to discretize the transport equation,
-it is customary to sweep through mesh. Sweeping through a mesh can be
-viewed as a resource-constrained project scheduling problem (RCPSP) \cite{} (\red{talk more
-about that. Two good reviews, need more ?}). In \cite{Adams2013}, a family of optimal sweeping algorithms is
-described for regular grids. It is noticeable that such an important problem,
-has been solved only recently for regular grids. For unstructured grids, several
-algorithms have been proposed \cite{}. It is important to notice that the
-optimal scheduling depends on the partitioning of the mesh. Two identical meshes
-partitioned differently will lead to different optimal scheduling. Therefore the
-interaction of sweeping and algorithm should be studied together. However, in
-this paper, we will assume that the partitioning is given. This case covers the
-case where partitioning is done by a third-party package \cite{} or the
-partitioning cannot be tailored for the transport because others physics must be
-accounted for. Here we will study a particular case of unstructured mesh namely
-adaptively refined mesh \cite{}. In this paper, we study the CAP-PFB algorithm
-introduced in \cite{Mo2014}. In particular, we will study how the algorithm
-behaves on regular grids and how it can modified for mesh constructed using
-adaptive mesh refinement (AMR). This work will show some preliminary results on
-the performance of sweeps on meshes similar to the ones produced by deal.II
-\cite{Bangerth2007,Bangerth2013} and p4est \cite{Burstedde2011}. Deal.II is an 
-open source finite element library which uses p4est for the partitioning.
+it is usually necessary to sweep multiple times through the mesh. Sweeping through a mesh can
+be viewed as a resource-constrained project scheduling problem (RCPSP)
+\cite{Brucker1999,Kolisch2006}. RCPSP has been extensively studied for more than
+four decades \cite{Pritsker1969} but most sweeping algorithms have been
+developed independently of these researches. In \cite{Adams2013}, a family of
+optimal sweeping algorithms is described for regular grids. For
+unstructured grids, several heuristics have been proposed over the years
+\cite{Pautz2002,Plimpton2005,Yan2013,Colomer2013,Kumar2005}. When studying
+sweeping algorithms, it is necessary to also study the partitioning of the mesh.
+Two identical meshes partitioned differently will lead to different optimal
+scheduling. Therefore, to obtain the best speed up given a mesh and a number of
+processors, the sweeping algorithm and the partitioning should be studied
+together. However, in this paper, we will assume that the partitioning is given.
+This covers the case where the partitioning is
+done by a third-party package or when the partitioning cannot be tailored for the
+transport equation because others physics must be accounted for. Moreover, we
+will study a particular case of unstructured mesh namely adaptively refined mesh
+\cite{Arnold2000,Baker2002,Bangerth2007,Jessee1998,Wang2010a}. In this paper, we
+study the CAP-PFB algorithm defined in \cite{Mo2014} which is based on a widely
+used method in RCPSP introduced in \cite{Li1992}. In particular, we will study
+how the algorithm behaves on regular grids and how it can modified for mesh
+constructed using adaptive mesh refinement (AMR). This work will show some
+preliminary results on the performance of sweeps on meshes similar to the ones
+produced by deal.II \cite{Bangerth2007,Bangerth2013} and p4est
+\cite{Burstedde2011}. Deal.II is an open source finite element library which
+uses p4est for the partitioning. In \Cref{parallel_sweeps}, we explain the
+CAP-PFB algorithm introduced in \cite{Mo2014} and we show how to apply it to
+adapted mesh. In \Cref{results}, we show some results, first on an uniform mesh
+where the optimal solution is known and then, on meshes more typical of what is
+obtained using AMR. We end with our conclusions in \Cref{conclusions}.
 
 
-\section{Parallel sweeps on AMR mesh}
+\section{Parallel sweeps on AMR mesh} \label{parallel_sweeps}
 \subsection{CAP-PFB algorithm}
-In this section, we explain the CAP-PFB (Cut Arc Prefence - Parallel Forward
-Backward) algorithm introduced in
-\cite{Mo2014}. The algorithm is based on the observation that when we try to
-start the tasks as soon as possible, we have a lot of work at the beginning but
-it trails off and to only few tasks later on. The opposite is true when we try
-to start the tasks as late as possible, we have few tasks at the beginning but a
-lot of work at the end. The idea of FB iterations (\red{extend and cite Li}) is 
-to alternate forward and backward iterations to have a lot of work all the time 
-and thus, decrease the time needed to execute all the tasks. The algorithm works 
+In this section, we explain the CAP-PFB (Cut Arc Preference - Parallel Forward
+Backward) algorithm introduced in \cite{Mo2014}. We will start by
+explaining the Forward-Backward (FB) algorithm \cite{Li1992}. It is based on the 
+observation that when we try to start the tasks as soon as possible, a lot of
+work is done at the beginning of the schedule but it trails off and there is only few tasks to
+execute later on. The opposite is true when we try
+to start the tasks as late as possible, few tasks are executed at the beginning but a
+lot of them are done at the end. The idea of the FB iterations is 
+to alternate a phase where the tasks are executed as early as possible (forward
+iteration) with a phase where the tasks are executed as late as possible
+(backward iteration). The hope is that we will get a more constant distribution
+of the work and therefore, decrease the time needed to execute all the tasks. The algorithm works 
 as follow:
 \begin{algorithm}[H]
   \caption{FB algorithm}
@@ -98,22 +111,23 @@ as follow:
       \end{enumerate}
   \end{itemize}
 \end{algorithm}
-PFB is just the parallel version of FP. Different FB algorithms can be created
-using different ranking methods. Inverting the order of the backward and forward
-iteration allow to finish the FB iterations with a forward sweep. Different FB
-algorithms will differ by the method used to compute the ranks of the tasks. CAP
-uses the start time and the end time of the tasks which forms an arc between two
-processors. 
+PFB is the parallel version of FP. If the forward iteration is after the
+backward iterations, one
+FB iteration will end with a forward sweep. Different FB
+algorithms will differ by the method used to compute the ranks of the tasks. The
+Cut Arc Preference (CAP) method uses a graph to represent the dependency of the
+task. The cut arcs are the arcs which are between tasks (vertices of the
+graph) that are owned by different processors.
 \begin{itemize}
-  \item Backward iteration rank: earliest start time of all its downstream cut
-    arcs $\min_{(v_k,v_j)\in S_i}\left\{s_j-w_{k,j}\right\} \cup
-    \left\{+\infty\right\}$. Tied are broke using the own task start time.
-  \item Forward iteration rank: latest end time of all its upstream cut arcs
-    $\max_{(v_j,v_k)\in B_i} \left\{f_j+w_{j,k}\right\} \cup
-    \left\{-\infty\right\}$. Tied are broke using the own task end time.
+  \item Backward iteration rank: earliest start time of all its downstream tasks
+    owned by a different processor. Tied are broken using the own task start time.
+    %$\min_{(v_k,v_j)\in S_i}\left\{s_j-w_{k,j}\right\} \cup \left\{+\infty\right\}$
+  \item Forward iteration rank: latest end time of all its upstream tasks owned
+    by a different processor. Tied are broken using the own task end time.
+    %$\max_{(v_j,v_k)\in B_i} \left\{f_j+w_{j,k}\right\} \cup \left\{-\infty\right\}$
 \end{itemize}
 \subsection{CAP-PFB on adapted mesh}
-In \cref{subdomain_id}, we show the partitioning of mesh using deal.II and p4est 
+In \Cref{subdomain_id}, we show the partitioning of mesh using deal.II and p4est 
 on 16 processors. This is a typical mesh produced by these libraries and it 
 represents the case that we want to tackle. 
 \begin{figure}[H]
@@ -133,40 +147,47 @@ represents the case that we want to tackle.
 \end{figure}
 We can see that the domain owned by each processors are not convex and that some
 processors own disjoint domains. In \cite{Mo2014}, the authors studied the case
-where all the tasks have the same amount of work to do because the scheduling
-algorithm will converge. This can be achieved by scheduling task that correspond
+where all the tasks have an equal amount of work to execute because in this case
+CAP-PFB is guarantee to converge. This can be achieved by scheduling task that correspond
 to only one cell. However, this will create an excessive amount of messages
-which will negatively impact the performance \cite{}. Therefore, it is necessary
+which will negatively impact the performance \cite{Pautz2002}. Therefore, it is necessary
 to have tasks that covers more than one cells. On a totally unstructured mesh,
 gathering cells to form convex zones can be a hard problem. However, this can be
 easily done on an AMR mesh, since the children of a coarse cell can be gather to
-form a convex zone. It is of coarse necessary that all the children are owned by
+form a convex zone, i.e. the parent cell. It is of course necessary that all the children are owned by
 the same processor. This process can be extended to grand-children,
 great-grand-children, etc. This will create tasks that have very different
-numbers of cells associated to them either because the cells have not been
-refined as much as others or because some descendants of a cells are owned by
+numbers of cells associated to them either because the cells have less ancestors or 
+because some cells that have a common ancestors are owned by
 different processors. Having tasks containing different numbers of cells can be
 taken into account in CAP-PFB but the resulting algorithm loses its convergence
-property. 
+property. We will show in \Cref{results} that the number of stages of successive
+schedules oscillates. Because the best solution can be obtained after a poor
+one, it is hard to check for convergence. To counter that behavior, we will
+reject schedules that increase the number of stages and use the best schedule
+for the following forward/backward iterations.
 
 
-\section{Results}
-In this section, we look at the number of stages produced by the heuristic. In
+\section{Results} \label{results}
+In this section, we look at the number of stages produced by the CAP-PFB heuristic. In
 the first test, we compared the sweep ordering produced by CAP-PFB with the
-optimal solution. In the second test, we look at the ordering on an AMR mesh.
+optimal solution on an uniform mesh. In the second and third tests, we look at the ordering on an
+AMR mesh. In all the tests, we use a $S_8$ quadrature, i.e. 40 directions. 
+When CAP-PFB is known to have an oscillatory behavior, we will
+performed 20 CAP-PFB iterations. Otherwise, we will stop when an iteration
+does not improve the scheduling.
 \subsection{Uniform mesh}
-Uniform mesh $S_8$ (40 directions). Number of processors used: $10\times10=100$, 
-$30\times30=900$, and $50\times50=2500$. For each test, we 
-start with three different initial sweep ordering. From \cite{Adams2013}, we know
-that the optimal number of stages on a 2D mesh is:
+In this test, we compare the number of stages on an uniform two-dimensional mesh 
+where each processors owns 40 tasks (one task for each direction). In this
+setup, the optimal number of stages is given by \cite{Adams2013}:
 \begin{equation}
   \mu = P_x + P_y - 4 + N_{\textrm{task}},
 \end{equation}
 with $P_x \times P_y$ the process grid and $N_{\textrm{task}}$ the number of
 tasks that each processors has to executed (40 in this example). Because CAP-PFB
 is an heuristic that requires an initial scheduling, we use three different
-initial scheduling for each tests.
-
+initial scheduling for each test. In \Cref{uniform}, we compare the number of
+stages obtained using CAP-PFB to the optimal solution for different meshes.
 % Order of results: no seed, seed = 0, seed = 1.
 % TODO: if enough time do 70 \times 70 it should be much faster now
 \begin{table}[H]
@@ -182,29 +203,33 @@ initial scheduling for each tests.
       $30\times 30$ &  392 &  96 &  96 & 2 \\
       $30\times 30$ &  376 &  96 &  96 & 2 \\
       $50\times 50$ & 2980 & 136 & 136 & 1 \\
-      $50\times 50$ &  570 & 136 & 136 & 2 \\ % much faster than no
-      % seed (less than one day instead of two)
+      $50\times 50$ &  570 & 136 & 136 & 2 \\ 
       $50\times 50$ &  573 & 136 & 136 & 2 \\
       \hline
     \end{tabular}
+    \caption{Number of stages required to sweep through an uniform mesh.}
+    \label{uniform}
   \end{center}
 \end{table}
-where N. procs is the number of processors, Init. n. stages is the number of
-stages of the initial scheduling, Final n. stages is the number of stages of the
-final scheduling, Optimal n. stages is the number of stages of the optimal
-scheduling, and Iter. is the number of CAP-FBS performed. We can see that the
-heuristic converges to the optimal solution in only one or two iterations for
-every initial scheduling.
+where \emph{N. procs} is the number of processors, \emph{Init. n. stages} is the 
+number of stages of the initial scheduling, \emph{Final n. stages} is the number 
+of stages of the final scheduling, \emph{Optimal n. stages} is the number of 
+stages of the optimal scheduling, and \emph{Iter.} is the number of CAP-FBS 
+performed. We can see that the heuristic converges to the optimal solution in 
+only one or two iterations for every initial scheduling.
 
-\subsection{AMR mesh}
-4 cells by procs + S8 = 160 tasks per procs
-
+\subsection{First AMR test}
+In this test, the cells in the middle of the domain are refined (\Cref{mesh_1}).
+The red squares represent the processors and the black squares represent cells
+or sets of cells. Forty tasks are associated to each black square. Each task
+required one unit of work.
 \begin{figure}[H]
   \centering
   \includegraphics[width=5cm]{mesh}
-  \caption{Mesh.}
+  \caption{Mesh refined in the middle of the domain.}
+  \label{mesh_1}
 \end{figure}
-
+First, we test the case where each processors owns 160 tasks (\Cref{amr_1}).
 % Order of results: no seed, seed = 0, seed = 1.
 % Table for amr_0 = refined mesh in the middle have NOT been gather
 \begin{table}[H]
@@ -216,11 +241,29 @@ every initial scheduling.
       148 & 1870 & 238 & 2 \\
       148 &  911 & 247 & 3 \\
       148 &  923 & 246 & 3 \\
+      592 & 3820 & 332 & 3 \\
+      592 & 1552 & 336 & 6 \\
+      592 & 1598 & 341 & 4 \\
       \hline
     \end{tabular}
+    \caption{Number of stages required to sweep through a mesh refined
+    in the middle of the domain.}
+    \label{amr_1}
   \end{center}
 \end{table}
+We can see that different initial sweeps produce sweeps requiring different
+number of stages. The best results are obtained when the initial sweep goes through the mesh
+along one direction at the time. In the others cases, the sweep can stall at the beginning 
+because instead of pushing the front wave forward, tasks other directions. This is slows 
+downs the front wave. This is due to the fact that the order of tasks that have
+the same ranks cannot be changed. This allows to make sure the precedence
+relation is always satisfied without having to check it but it increases the
+sensitivity of the algorithm to the initial sweep.
 
+Next the tasks in the refined area are gathered together.
+Therefore, the processors of this zone do not have 160 tasks, each requiring one
+unit of work to be executed, but 40 tasks, each requiring four units of work to
+be executed (\Cref{amr_2}). 
 % Order of results: no seed, seed = 0, seed = 1.
 % Table for amr_1 and amr_3 = refined mesh in the middle have been gather
 \begin{table}[H]
@@ -229,36 +272,159 @@ every initial scheduling.
       \hline
       N.procs & Init. n. stages & Final n. stages & Iter. \\
       \hline
-      148 & 2760 & 238 & 3 \\
-      148 & 804  & 250 & 2 \\
-      148 & 788  & 244 & 4 \\
-      592 & 5520 & 380 & 1 \\
-      592 & 1402 & 381 & 6 \\
-      592 & 1364 & 386 & 2 \\
+      148 & 2760 & 238 & 3  \\
+      148 & 804  & 250 & 2  \\
+      148 & 788  & 244 & 4  \\
+      592 & 5520 & 332 & 3  \\
+      592 & 1402 & 335 & 11 \\
+      592 & 1364 & 332 & 9  \\
       \hline
     \end{tabular}
+    \caption{Number of stages required to sweep through a mesh refined in the
+      middle of the domain after gathering of the tasks.}
+    \label{amr_2}
   \end{center}
 \end{table}
-\begin{itemize}
-  \item For the third test, monotonic convergence is broken. The backward
-    schedule at the fifth iteration takes a longer time that the forward
-    schedule at the fourth iteration. The forward schedule at the end of the
-    fifth iteration is the same as the one at the end of the fourth iteration.
-  \item For the fifth test, monotonic convergence is broken. Lots of
-    oscillations between 381 and 385 stages starting at the third iterations.
-  \item Fort the sixth test, the minimum is reached during the backward
-    scheduling of the second iteration. After that the number of stages
-    oscillates between 387 and 392 stages.
-\end{itemize}
-Even if there is oscillation, it is not too far from the minimum and the
-schedule given after a few iterations is close to the best solution. We also
-notice that the final number of stages depends on the initial scheduling unlike
-the uniform case.
+
+\Cref{convergence_central_148,convergence_central_592} show the number of stages
+as a function of the number of CAP-PFB iterations. When using 148 processors,
+the oscillations are limited or non-existent.
+\begin{figure}[H]
+  \begin{subfigure}[b]{.5\textwidth}
+    \centering
+    \includegraphics[width=7cm]{convergence_central_148}
+    \caption{148 processors.}
+  \label{convergence_central_148}
+  \end{subfigure}
+  \begin{subfigure}[b]{.5\textwidth}
+    \centering
+    \includegraphics[width=7cm]{convergence_central_592}
+    \caption{592 processors.}
+  \label{convergence_central_592}
+  \end{subfigure}
+  \caption{Number of stages as a function of the number of CAP-PFB iterations.
+  Half iterations correspond to backward iterations.}
+\end{figure}
+
+In the last case studied for this test, we do not allow for oscillations. If a
+backward iteration, resp. forward iteration, produces a sweep worse than the
+previous sweep, that sweep is disregarded and the best sweep is used in the
+following forward iteration, resp. backward iteration. The results are shown in 
+\Cref{amr_3}.
+% Order of results: no seed, seed = 0, seed = 1.
+% Table for new_amr_1 and new_amr_3 = refined mesh in the middle have been gather
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      N.procs & Init. n. stages & Final n. stages & Iter. \\
+      \hline
+      148 & 2760 & 238 & 3 \\
+      148 & 804  & 250 & 2 \\
+      148 & 788  & 244 & 5 \\
+      592 & 5520 & 332 & 3 \\
+      592 & 1402 & 351 & 3 \\
+      592 & 1364 & 337 & 6 \\
+      \hline
+    \end{tabular}
+    \caption{Number of stages required to sweep through a mesh refined in the
+      middle of the domain after gathering of the tasks without oscillations
+    allowed.}
+    \label{amr_3}
+  \end{center}
+\end{table}
+%TODO comment results once I get them.
 
 
-\subsection{AMR with discontinuous partitioning}
+\subsection{Second AMR test}
+In this test, the mesh is given by \Cref{mesh_2}. Once the gathering of tasks is
+done, each processor owns tasks that require one unit of work and tasks that
+require four units of work.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5cm]{mesh_2}
+  \caption{Mesh refined in the middle of the domain.}
+  \label{mesh_2}
+\end{figure}
 
-\section{Conclusions}
+%TODO: comments once we get the results
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      N.procs & Init. n. stages & Final n. stages & Iter. \\
+      \hline
+      $10 \times 10$ & 16808 & 518 & 3 \\
+      $10 \times 10$ &  1841 & 562 & 6 \\
+      $10 \times 10$ &  1832 & 541 & 6 \\
+      $20 \times 20$ &       &     &   \\
+      $20 \times 20$ &       &     &   \\
+      $20 \times 20$ &       &     &   \\
+      \hline
+    \end{tabular}
+    \caption{Number of stages required to sweep through an adapted mesh.}
+    \label{band_1}
+  \end{center}
+\end{table}
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      N.procs & Init. n. stages & Final n. stages & Iter. \\
+      \hline
+      $10 \times 10$ & 3820 & 522 & 11 \\
+      $10 \times 10$ & 1833 & 539 & 16 \\
+      $10 \times 10$ & 1736 & 536 & 20 \\
+      $20 \times 20$ &       &     &   \\
+      $20 \times 20$ &       &     &   \\
+      $20 \times 20$ &       &     &   \\
+      \hline
+    \end{tabular}
+    \caption{Number of stages required to sweep through an adapted mesh after
+    gathering of the tasks.}
+    \label{band_2}
+  \end{center}
+\end{table}
+
+\begin{figure}[H]
+  \begin{subfigure}[b]{.5\textwidth}
+    \centering
+    \includegraphics[width=7cm]{convergence_band_20_20}
+    \caption{$10\times 10$ processors.}
+  \end{subfigure}
+  \begin{subfigure}[b]{.5\textwidth}
+    \centering
+    \includegraphics[width=7cm]{convergence_band_20_20}
+    \caption{$20\times 20$ processors.}
+  \end{subfigure}
+  \caption{Number of stages as a function of the number of CAP-PFB iterations.
+  Half iterations correspond backward iterations.}
+  \label{convergence_band}
+\end{figure}
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      N.procs & Init. n. stages & Final n. stages & Iter. \\
+      \hline
+      $10 \times 10$ &  &  &  \\
+      $10 \times 10$ &  &  &  \\
+      $10 \times 10$ &  &  &  \\
+      $20 \times 20$ &       &     &   \\
+      $20 \times 20$ &       &     &   \\
+      $20 \times 20$ &       &     &   \\
+      \hline
+    \end{tabular}
+    \caption{Number of stages required to sweep through an adapted mesh after
+    gathering of the tasks without oscillations allowed.}
+    \label{band_3}
+  \end{center}
+\end{table}
+
+\section{Conclusions} \label{conclusions}
 
 
 \bibliographystyle{unsrt}
