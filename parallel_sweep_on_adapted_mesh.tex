@@ -333,7 +333,10 @@ following forward iteration, resp. backward iteration. The results are shown in
     \label{amr_3}
   \end{center}
 \end{table}
-%TODO comment results once I get them.
+There are three cases where the best scheduling is obtained after a
+non-monotonic decrease, in one of them the best scheduling is obtained with the
+new method. In the other two cases, the solution is the best scheduling obtained
+in during the monotone phase.
 
 
 \subsection{Second AMR test}
@@ -358,9 +361,9 @@ require four units of work.
       $10 \times 10$ & 16808 & 518 & 3 \\
       $10 \times 10$ &  1841 & 562 & 6 \\
       $10 \times 10$ &  1832 & 541 & 6 \\
-      $20 \times 20$ &       &     &   \\
-      $20 \times 20$ &       &     &   \\
-      $20 \times 20$ &       &     &   \\
+      $20 \times 20$ & 65618 & 882 & 2 \\
+      $20 \times 20$ &  3488 & 882 & 3 \\
+      $20 \times 20$ &  3435 & 882 & 5 \\
       \hline
     \end{tabular}
     \caption{Number of stages required to sweep through an adapted mesh.}
@@ -377,9 +380,9 @@ require four units of work.
       $10 \times 10$ & 3820 & 522 & 11 \\
       $10 \times 10$ & 1833 & 539 & 16 \\
       $10 \times 10$ & 1736 & 536 & 20 \\
-      $20 \times 20$ &       &     &   \\
-      $20 \times 20$ &       &     &   \\
-      $20 \times 20$ &       &     &   \\
+      $20 \times 20$ & 9620 & 884 & 2  \\
+      $20 \times 20$ & 3108 & 922 & 10 \\
+      $20 \times 20$ & 3117 & 905 & 6  \\
       \hline
     \end{tabular}
     \caption{Number of stages required to sweep through an adapted mesh after
@@ -396,7 +399,7 @@ require four units of work.
   \end{subfigure}
   \begin{subfigure}[b]{.5\textwidth}
     \centering
-    \includegraphics[width=7cm]{convergence_band_20_20}
+    \includegraphics[width=7cm]{convergence_band_40_40}
     \caption{$20\times 20$ processors.}
   \end{subfigure}
   \caption{Number of stages as a function of the number of CAP-PFB iterations.
@@ -410,12 +413,12 @@ require four units of work.
       \hline
       N.procs & Init. n. stages & Final n. stages & Iter. \\
       \hline
-      $10 \times 10$ &  &  &  \\
-      $10 \times 10$ &  &  &  \\
-      $10 \times 10$ &  &  &  \\
-      $20 \times 20$ &       &     &   \\
-      $20 \times 20$ &       &     &   \\
-      $20 \times 20$ &       &     &   \\
+      $10 \times 10$ & 3820 & 533 & 4 \\
+      $10 \times 10$ & 1833 & 580 & 5 \\
+      $10 \times 10$ & 1736 & 594 & 5 \\
+      $20 \times 20$ & 9620 & 884 & 3 \\
+      $20 \times 20$ & 3108 & 923 & 8 \\
+      $20 \times 20$ & 3117 & 907 & 7 \\
       \hline
     \end{tabular}
     \caption{Number of stages required to sweep through an adapted mesh after
