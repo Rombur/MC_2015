@@ -42,21 +42,41 @@
 \maketitle
 
 \begin{abstract}
-  TODO
+  \red{TODO}
 \end{abstract}
 
 % In the paper, they gave a weight of 1/3 instead of zero to the arcs between
 % two different processors.
 \section{Introduction}
 When using the discrete ordinates method to discretize the transport equation,
-it is usually necessary to sweep multiple times through the mesh. Sweeping in
+it is usually necessary to sweep multiple times through the mesh. If we assume 
+that the incident angular flux is specified on each incoming surface of the
+problem with no reflecting or periodic boundaries, sweeping through a mesh along
+a direction can be represented by a Directed Acyclic Graph (see \cref{tasks}).
+\begin{figure}[H]
+  \begin{subfigure}[b]{.5\textwidth}
+    \centering
+    \includegraphics[width=5cm]{task_1}
+  \end{subfigure}
+  \begin{subfigure}[b]{.5\textwidth}
+    \centering
+    \includegraphics[width=5cm]{task_2}
+  \end{subfigure}
+  \caption{Mesh and DAG associated to the sweep along two different directions.}
+  \label{tasks}
+\end{figure}
+Therefore sweeping in
 parallel through a mesh can be viewed as a resource-constrained project
-scheduling problem (RCPSP) \cite{Brucker1999,Kolisch2006}. RCPSP has been
-extensively studied for more than four decades \cite{Pritsker1969} but most
-sweeping algorithms have been developed independently of these researches. In
-\cite{Adams2013}, a family of optimal sweeping algorithms is described for
+scheduling problem (RCPSP) \cite{Brucker1999,Kolisch2006} where the constraints
+are given by the DAG and by the fact that a processor cannot execute two tasks
+(vertices of the DAG) at the same time. 
+The goal of RCPSP is to schedule the tasks such that all the constraints are
+satisfied and that the time required to execute all the tasks is minimal. 
+RCPSP has been extensively studied for more than four decades \cite{Pritsker1969} but most
+sweeping algorithms have been developed independently of these researches. 
+In \cite{Adams2013}, a family of optimal sweeping algorithms is described for
 regular grids. For unstructured grids, several heuristics have been proposed
-over the years \cite{Pautz2002,Plimpton2005,Yan2013,Colomer2013,Kumar2005}. When
+over the years \cite{Pautz2002,Plimpton2005,Yan2013,Colomer2013,Kumar2005,Mo2014}. When
 studying sweeping algorithms, it is necessary to also study the partitioning of
 the mesh. Two identical meshes partitioned differently will lead to different
 optimal scheduling. Therefore, to obtain the best speed up given a mesh and a
@@ -66,7 +86,8 @@ is given. This is representative of the case where the partitioning is done by a
 third-party library or when the partitioning cannot be tailored for the
 transport equation because others physics must be accounted for. We will focus
 our study on refined meshes
-\cite{Arnold2000,Baker2002,Bangerth2007,Jessee1998,Wang2010a}. In this paper, we
+\cite{Arnold2000,Baker2002,Bangerth2007,Jessee1998,Wang2010a}.
+In this paper, we
 study the CAP-PFB algorithm defined in \cite{Mo2014} which is based on a widely
 used method in RCPSP introduced in \cite{Li1992}. In particular, we will study
 how the algorithm behaves on regular grids and how it can modified for mesh
@@ -94,8 +115,9 @@ schedule but it quickly decreases and there is only few tasks to perform later
 on. The opposite is true when we try to execute the tasks as late as possible,
 few tasks are performed at the beginning but a lot of them are done at the end
 of the schedule. The idea of the FB iterations is to alternate a phase where the
-tasks are executed as early as possible (forward iteration) with a phase where
-the tasks are executed as late as possible (backward iteration). The hope is
+tasks are executed as late as possible (backward iteration) with a phase where the
+tasks are executed as early as possible (forward iteration)\footnote{The
+original algorithm applied the forward iteration first.}. The hope is
 that we will get a more constant distribution of the work and therefore,
 decrease the time needed to execute all the tasks. The algorithm works as
 follow:
@@ -105,38 +127,43 @@ follow:
     \item Start with an initial scheduling.
     \item Iterate until convergence or maximum number of steps:
       \begin{enumerate}
-        \item Forward iteration:
-          \begin{enumerate}
-            \item Compute the ranks of the tasks.
-            \item Sort the tasks in ascending order of the ranks.
-          \end{enumerate}
         \item Backward iteration:
           \begin{enumerate}
-            \item Compute the ranks of the tasks.
-            \item Sort the tasks in descending order of the ranks.
+            \item Compute the ranks of the tasks based on the current scheduling.
+            \item Sort the tasks in descending order of the ranks to create a
+              new scheduling.
+          \end{enumerate}
+        \item Forward iteration:
+          \begin{enumerate}
+            \item Compute the ranks of the tasks based on the current
+              scheduling, i.e. the scheduling produced by the backward
+              iteration.
+            \item Sort the tasks in ascending order of the ranks to create a new
+              scheduling.
           \end{enumerate}
       \end{enumerate}
   \end{itemize}
+  \label{fb}
 \end{algorithm}
-PFB is the parallel version of FB. If the forward iteration is done after the
-backward iteration, one
-FB iteration will end with a forward sweep. Different FB
-algorithms will differ by the method used to compute the ranks of the tasks. The
-Cut Arc Preference (CAP) method uses a graph to represent the dependency of the
-task. The cut arcs are the arcs between tasks (vertices of the
+Different FB algorithms will differ by the method used to compute the ranks of the tasks. The
+Cut Arc Preference (CAP) method uses DAG to represent the dependency of the
+tasks. The cut arcs are the arcs between tasks (vertices of the
 graph) owned by different processors. The ranks as computed as follows:
-\begin{itemize}
-  \item Backward iteration rank of a task: earliest start time of all its downstream tasks
+\begin{description}
+  \item[Backward iteration:] the rank of a task is the earliest start time of all its downstream tasks
     owned by a different processor. Tied are broken using the own task start time.
     %$\min_{(v_k,v_j)\in S_i}\left\{s_j-w_{k,j}\right\} \cup \left\{+\infty\right\}$
-  \item Forward iteration rank of a task: latest end time of all its upstream tasks owned
+  \item[Forward iteration:] the rank of a task is the latest end time of all its upstream tasks owned
     by a different processor. Tied are broken using the own task end time.
     %$\max_{(v_j,v_k)\in B_i} \left\{f_j+w_{j,k}\right\} \cup \left\{-\infty\right\}$
-\end{itemize}
+\end{description}
+PFB works exactly the same way as FB but it assumes that the tasks are
+distributed among processors.
 \subsection{CAP-PFB on adapted mesh}
 In \Cref{subdomain_id}, we show the partitioning of mesh using deal.II and p4est 
 on 16 processors. This is a typical mesh produced by these libraries and it is
-representative of the case that we want to tackle. 
+representative of the case that we want to tackle (the problem solved is a
+simple Laplace equation but the mesh and the partition are rather typical). 
 \begin{figure}[H]
   \begin{subfigure}[b]{.5\textwidth}
     \centering
@@ -149,7 +176,7 @@ representative of the case that we want to tackle.
     \caption{Partitioning.}
   \end{subfigure}
   \caption{Partitioning and mesh using 16 processors for a typical problem
-  (Step-40).}
+  (Step-40 of deal.II).}
   \label{subdomain_id}
 \end{figure}
 We can see that the domain owned by each processors are not convex and that some
@@ -170,7 +197,7 @@ because some cells have less ancestors or because some cells that have a common
 ancestors are owned by different processors. Having tasks containing different
 numbers of cells can be  taken into account in CAP-PFB but the resulting
 algorithm loses its convergence property. We will show in \Cref{results} that
-the number of stages of successive scheduling oscillates. Because the best
+the number of stages, i.e. the number of steps needed to sweep through the mesh, of successive scheduling oscillates. Because the best
 solution can be obtained after a poor one, it is hard to check for convergence.
 To fix this undesirable behavior, scheduling that increase the number of stages
 will be rejected and instead, the best scheduling will be used by the following
@@ -241,21 +268,32 @@ associated to each black square.
   \caption{Mesh refined in the middle of the domain.}
   \label{mesh_1}
 \end{figure}
-First, we test the case where each processors owns 160 tasks (\Cref{amr_1}).
+First, we test the case where each processors owns 160 tasks (\Cref{amr_1}). For
+this mesh the optimal number of stages is not know but we can have an idea of
+the minimal number stages by counting the minimum number of stages before the
+central processors can start working ($N_{fill}$)
+and the number of tasks own by each of the central processors ($N_{tasks}$). In
+this case, we get: Minimal numbers of stages is $2\times N_{fill}+N_{tasks}$
+\cite{Adams2013}. Because the mesh is not uniform it is not obvious that this
+minimum can be achieved. 
+% N_{fill} = 24
+% N_{tasks} = 160
+% N_{fill} = 56
+% N_{tasks} = 268
 % Order of results: no seed, seed = 0, seed = 1.
 % Table for amr_0 = refined mesh in the middle have NOT been gather
 \begin{table}[H]
   \begin{center}
-    \begin{tabular}{|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|}
       \hline
-      N.procs & Init. n. stages & Final n. stages & Iter. \\
+      N.procs & Init. n. stages & Final n. stages & Minimal n. stages & Iter. \\
       \hline
-      148 & 1870 & 238 & 2 \\
-      148 &  911 & 247 & 3 \\
-      148 &  923 & 246 & 3 \\
-      592 & 3820 & 332 & 3 \\
-      592 & 1552 & 336 & 6 \\
-      592 & 1598 & 341 & 4 \\
+      148 & 1870 & 238 & 208 & 2 \\
+      148 &  911 & 247 & 208 & 3 \\
+      148 &  923 & 246 & 208 & 3 \\
+      592 & 3820 & 332 & 268 & 3 \\
+      592 & 1552 & 336 & 268 & 6 \\
+      592 & 1598 & 341 & 268 & 4 \\
       \hline
     \end{tabular}
     \caption{Number of stages required to sweep through a mesh refined
@@ -300,7 +338,8 @@ be executed, but 40 tasks, each requiring four units of work to be executed
 \end{table}
 
 It is remarkable that in some cases gathering the tasks improves the scheduling
-and only one case the performance is degraded.
+and only one case the performance is degraded. This is not what we would expect
+intuitively, since having the tasks gathered reduces the granularity.
 
 \Cref{convergence_central_148,convergence_central_592} show the number of stages
 as a function of the number of CAP-PFB iterations. When 148 processors are used,
@@ -323,7 +362,8 @@ ordering produced when the algorithm seems to converge.
   \label{convergence_central_592}
   \end{subfigure}
   \caption{Number of stages as a function of the number of CAP-PFB iterations.
-  Half iterations correspond to backward iterations.}
+  Half iterations correspond to backward iterations. Different colors correspond
+  to different initial scheduling.}
 \end{figure}
 
 In the last case studied for this test, we do not allow for oscillations. If a
@@ -341,7 +381,7 @@ following forward iteration, resp. backward iteration. The results are shown in
       \hline
       148 & 2760 & 238 & 3 \\
       148 & 804  & 250 & 2 \\
-      148 & 788  & 244 & 5 \\
+      148 & 788  & 249 & 2 \\
       592 & 5520 & 332 & 3 \\
       592 & 1402 & 351 & 3 \\
       592 & 1364 & 337 & 6 \\
@@ -353,10 +393,11 @@ following forward iteration, resp. backward iteration. The results are shown in
     \label{amr_3}
   \end{center}
 \end{table}
-There are three cases where the best scheduling is obtained after a
+\red{There are three cases where the best scheduling is obtained after a
 non-monotonic decrease, in one of them the best scheduling is obtained with the
 new method. In the other two cases, the solution is the best scheduling obtained
-in during the monotone phase.
+in during the monotone phase. The convergence at 249 is a false convergence due
+to the fact that two iterations in a row we get the same number of stages.}
 
 
 \subsection{Second AMR test}
@@ -371,18 +412,20 @@ require four units of work.
 \end{figure}
 
 First, we test the case where each processor owns 400 tasks (\Cref{band_1}).
+We compute the minimal number of stages like in the previous subsection. Because
+the lack of symmetry, it is not obvious that this number can be reached
 \begin{table}[H]
   \begin{center}
-    \begin{tabular}{|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|}
       \hline
-      N.procs & Init. n. stages & Final n. stages & Iter. \\
+      N.procs & Init. n. stages & Final n. stages & Minimal n. stages & Iter. \\
       \hline
-      $10 \times 10$ & 16808 & 518 & 3 \\
-      $10 \times 10$ &  1841 & 562 & 6 \\
-      $10 \times 10$ &  1832 & 541 & 6 \\
-      $20 \times 20$ & 65618 & 882 & 2 \\
-      $20 \times 20$ &  3488 & 882 & 3 \\
-      $20 \times 20$ &  3435 & 882 & 5 \\
+      $10 \times 10$ & 16808 & 518 & 494 & 3 \\
+      $10 \times 10$ &  1841 & 562 & 494 & 6 \\
+      $10 \times 10$ &  1832 & 541 & 494 & 6 \\
+      $20 \times 20$ & 65618 & 882 & 614 & 2 \\
+      $20 \times 20$ &  3488 & 882 & 614 & 3 \\
+      $20 \times 20$ &  3435 & 882 & 614 & 5 \\
       \hline
     \end{tabular}
     \caption{Number of stages required to sweep through an adapted mesh.}
@@ -431,7 +474,8 @@ we show the convergence of CAP-PFB.
     \caption{$20\times 20$ processors.}
   \end{subfigure}
   \caption{Number of stages as a function of the number of CAP-PFB iterations.
-  Half iterations correspond backward iterations.}
+  Half iterations correspond backward iterations. Different colors correspond to
+  different initial scheduling.}
   \label{convergence_band}
 \end{figure}
  

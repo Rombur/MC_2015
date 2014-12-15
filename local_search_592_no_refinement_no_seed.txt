@@ -1,0 +1,2109 @@
+start building tasks
+Create initial scheduling
+Initial scheduling
+Start time 0
+End time 5520
+Execution time 5520
+----------------
+Iteration 0
+Compute_backward_ranks
+Backward_sort
+Backward_scheduling
+Backward scheduling
+Start time 5100
+End time 5520
+Execution time 420
+ Best schedule
+ Start time 5100
+ End time 5520
+ Execution time 420
+compute_forward_ranks
+forward_sort
+forward_scheduling
+Forward scheduling
+Start time 5100
+End time 5452
+Execution time 352
+ Best schedule
+ Start time 5100
+ End time 5452
+ Execution time 352
+----------------
+Iteration 1
+Compute_backward_ranks
+Backward_sort
+Backward_scheduling
+Backward scheduling
+Start time 5112
+End time 5452
+Execution time 340
+ Best schedule
+ Start time 5112
+ End time 5452
+ Execution time 340
+compute_forward_ranks
+forward_sort
+forward_scheduling
+Forward scheduling
+Start time 5112
+End time 5448
+Execution time 336
+ Best schedule
+ Start time 5112
+ End time 5448
+ Execution time 336
+----------------
+Iteration 2
+Compute_backward_ranks
+Backward_sort
+Backward_scheduling
+Backward scheduling
+Start time 5112
+End time 5448
+Execution time 336
+ Best schedule
+ Start time 5112
+ End time 5448
+ Execution time 336
+compute_forward_ranks
+forward_sort
+forward_scheduling
+Forward scheduling
+Start time 5112
+End time 5444
+Execution time 332
+ Best schedule
+ Start time 5112
+ End time 5444
+ Execution time 332
+----------------
+Iteration 3
+Compute_backward_ranks
+Backward_sort
+Backward_scheduling
+Backward scheduling
+Start time 5112
+End time 5444
+Execution time 332
+ Best schedule
+ Start time 5112
+ End time 5444
+ Execution time 332
+compute_forward_ranks
+forward_sort
+forward_scheduling
+Forward scheduling
+Start time 5112
+End time 5444
+Execution time 332
+ Best schedule
+ Start time 5112
+ End time 5444
+ Execution time 332
+Execution time before local search:  332
+task_to_move 414 19
+new pos 18 delta t -1
+execution time 332
+Executed local search 0 execution time 332
+task_to_move 581 56
+new pos 52 delta t -4
+execution time 332
+Executed local search 1 execution time 332
+task_to_move 308 35
+new pos 33 delta t -2
+execution time 332
+Executed local search 2 execution time 332
+task_to_move 553 52
+new pos 46 delta t -6
+execution time 332
+Executed local search 3 execution time 332
+task_to_move 394 20
+new pos 19 delta t -1
+execution time 332
+Executed local search 4 execution time 332
+task_to_move 266 30
+new pos 29 delta t -1
+execution time 332
+Executed local search 5 execution time 332
+task_to_move 133 9
+new pos 8 delta t -1
+execution time 332
+Executed local search 6 execution time 332
+task_to_move 534 60
+new pos 59 delta t -1
+execution time 332
+Executed local search 7 execution time 332
+task_to_move 343 48
+new pos 46 delta t -2
+execution time 332
+Executed local search 8 execution time 332
+task_to_move 103 66
+new pos 65 delta t -1
+execution time 332
+Executed local search 9 execution time 332
+task_to_move 350 33
+new pos 32 delta t -1
+execution time 332
+Executed local search 10 execution time 332
+task_to_move 196 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 11 execution time 332
+task_to_move 506 83
+new pos 82 delta t -1
+execution time 332
+Executed local search 12 execution time 332
+task_to_move 571 80
+new pos 79 delta t -1
+execution time 332
+Executed local search 13 execution time 332
+task_to_move 95 86
+new pos 83 delta t -3
+execution time 332
+Executed local search 14 execution time 332
+task_to_move 100 100
+new pos 99 delta t -1
+execution time 332
+Executed local search 15 execution time 332
+task_to_move 559 38
+new pos 30 delta t -8
+execution time 332
+Executed local search 16 execution time 332
+task_to_move 348 20
+new pos 17 delta t -3
+execution time 332
+Executed local search 17 execution time 332
+task_to_move 164 38
+new pos 33 delta t -5
+execution time 332
+Executed local search 18 execution time 332
+task_to_move 309 32
+new pos 31 delta t -1
+execution time 332
+Executed local search 19 execution time 332
+task_to_move 340 16
+new pos 14 delta t -2
+execution time 332
+Executed local search 20 execution time 332
+task_to_move 352 16
+new pos 15 delta t -1
+execution time 332
+Executed local search 21 execution time 332
+task_to_move 59 96
+new pos 94 delta t -2
+execution time 332
+Executed local search 22 execution time 332
+task_to_move 123 69
+new pos 68 delta t -1
+execution time 332
+Executed local search 23 execution time 332
+task_to_move 262 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 24 execution time 332
+task_to_move 289 33
+new pos 32 delta t -1
+execution time 332
+Executed local search 25 execution time 332
+task_to_move 573 76
+new pos 75 delta t -1
+execution time 332
+Executed local search 26 execution time 332
+task_to_move 425 13
+new pos 12 delta t -1
+execution time 332
+Executed local search 27 execution time 332
+task_to_move 536 80
+new pos 78 delta t -2
+execution time 332
+Executed local search 28 execution time 332
+task_to_move 357 24
+new pos 23 delta t -1
+execution time 332
+Executed local search 29 execution time 332
+task_to_move 330 34
+new pos 33 delta t -1
+execution time 332
+Executed local search 30 execution time 332
+task_to_move 192 12
+new pos 11 delta t -1
+execution time 332
+Executed local search 31 execution time 332
+task_to_move 493 88
+new pos 87 delta t -1
+execution time 332
+Executed local search 32 execution time 332
+task_to_move 572 100
+new pos 95 delta t -5
+execution time 332
+Executed local search 33 execution time 332
+task_to_move 267 17
+new pos 16 delta t -1
+execution time 332
+Executed local search 34 execution time 332
+task_to_move 223 18
+new pos 16 delta t -2
+execution time 332
+Executed local search 35 execution time 332
+task_to_move 367 58
+new pos 56 delta t -2
+execution time 332
+Executed local search 36 execution time 332
+task_to_move 239 23
+new pos 22 delta t -1
+execution time 332
+Executed local search 37 execution time 332
+task_to_move 583 54
+new pos 48 delta t -6
+execution time 332
+Executed local search 38 execution time 332
+task_to_move 239 24
+new pos 23 delta t -1
+execution time 332
+Executed local search 39 execution time 332
+task_to_move 80 66
+new pos 65 delta t -1
+execution time 332
+Executed local search 40 execution time 332
+task_to_move 411 48
+new pos 44 delta t -4
+execution time 332
+Executed local search 41 execution time 332
+task_to_move 351 28
+new pos 26 delta t -2
+execution time 332
+Executed local search 42 execution time 332
+task_to_move 63 88
+new pos 83 delta t -5
+execution time 332
+Executed local search 43 execution time 332
+task_to_move 432 34
+new pos 33 delta t -1
+execution time 332
+Executed local search 44 execution time 332
+task_to_move 41 64
+new pos 61 delta t -3
+execution time 332
+Executed local search 45 execution time 332
+task_to_move 21 69
+new pos 68 delta t -1
+execution time 332
+Executed local search 46 execution time 332
+task_to_move 371 18
+new pos 15 delta t -3
+execution time 332
+Executed local search 47 execution time 332
+task_to_move 325 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 48 execution time 332
+task_to_move 582 32
+new pos 28 delta t -4
+execution time 332
+Executed local search 49 execution time 332
+task_to_move 267 20
+new pos 18 delta t -2
+execution time 332
+Executed local search 50 execution time 332
+task_to_move 244 29
+new pos 27 delta t -2
+execution time 332
+Executed local search 51 execution time 332
+task_to_move 79 104
+new pos 102 delta t -2
+execution time 332
+Executed local search 52 execution time 332
+task_to_move 261 19
+new pos 18 delta t -1
+execution time 332
+Executed local search 53 execution time 332
+task_to_move 0 96
+new pos 95 delta t -1
+execution time 332
+Executed local search 54 execution time 332
+task_to_move 164 44
+new pos 43 delta t -1
+execution time 332
+Executed local search 55 execution time 332
+task_to_move 243 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 56 execution time 332
+task_to_move 331 32
+new pos 31 delta t -1
+execution time 332
+Executed local search 57 execution time 332
+task_to_move 372 32
+new pos 30 delta t -2
+execution time 332
+Executed local search 58 execution time 332
+task_to_move 98 110
+new pos 109 delta t -1
+execution time 332
+Executed local search 59 execution time 332
+task_to_move 290 32
+new pos 30 delta t -2
+execution time 332
+Executed local search 60 execution time 332
+task_to_move 568 78
+new pos 74 delta t -4
+execution time 332
+Executed local search 61 execution time 332
+task_to_move 482 130
+new pos 129 delta t -1
+execution time 332
+Executed local search 62 execution time 332
+task_to_move 489 100
+new pos 99 delta t -1
+execution time 332
+Executed local search 63 execution time 332
+task_to_move 132 7
+new pos 5 delta t -2
+execution time 332
+Executed local search 64 execution time 332
+task_to_move 132 7
+new pos 5 delta t -2
+execution time 332
+Executed local search 65 execution time 332
+task_to_move 477 50
+new pos 49 delta t -1
+execution time 332
+Executed local search 66 execution time 332
+task_to_move 464 15
+new pos 14 delta t -1
+execution time 332
+Executed local search 67 execution time 332
+task_to_move 439 15
+new pos 13 delta t -2
+execution time 332
+Executed local search 68 execution time 332
+task_to_move 399 12
+new pos 11 delta t -1
+execution time 332
+Executed local search 69 execution time 332
+task_to_move 555 182
+new pos 181 delta t -1
+execution time 332
+Executed local search 70 execution time 332
+task_to_move 570 91
+new pos 90 delta t -1
+execution time 332
+Executed local search 71 execution time 332
+task_to_move 347 14
+new pos 13 delta t -1
+execution time 332
+Executed local search 72 execution time 332
+task_to_move 476 80
+new pos 72 delta t -8
+execution time 332
+Executed local search 73 execution time 332
+task_to_move 315 20
+new pos 19 delta t -1
+execution time 332
+Executed local search 74 execution time 332
+task_to_move 14 74
+new pos 72 delta t -2
+execution time 332
+Executed local search 75 execution time 332
+task_to_move 474 82
+new pos 81 delta t -1
+execution time 332
+Executed local search 76 execution time 332
+task_to_move 383 10
+new pos 8 delta t -2
+execution time 332
+Executed local search 77 execution time 332
+task_to_move 536 76
+new pos 69 delta t -7
+execution time 332
+Executed local search 78 execution time 332
+task_to_move 461 8
+new pos 7 delta t -1
+execution time 332
+Executed local search 79 execution time 332
+task_to_move 443 19
+new pos 16 delta t -3
+execution time 332
+Executed local search 80 execution time 332
+task_to_move 323 70
+new pos 65 delta t -5
+execution time 332
+Executed local search 81 execution time 332
+task_to_move 113 91
+new pos 90 delta t -1
+execution time 332
+Executed local search 82 execution time 332
+task_to_move 573 76
+new pos 75 delta t -1
+execution time 332
+Executed local search 83 execution time 332
+task_to_move 82 80
+new pos 77 delta t -3
+execution time 332
+Executed local search 84 execution time 332
+task_to_move 309 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 85 execution time 332
+task_to_move 488 102
+new pos 101 delta t -1
+execution time 332
+Executed local search 86 execution time 332
+task_to_move 353 14
+new pos 13 delta t -1
+execution time 332
+Executed local search 87 execution time 332
+task_to_move 376 27
+new pos 26 delta t -1
+execution time 332
+Executed local search 88 execution time 332
+task_to_move 495 54
+new pos 52 delta t -2
+execution time 332
+Executed local search 89 execution time 332
+task_to_move 452 80
+new pos 79 delta t -1
+execution time 332
+Executed local search 90 execution time 332
+task_to_move 581 36
+new pos 34 delta t -2
+execution time 332
+Executed local search 91 execution time 332
+task_to_move 525 84
+new pos 82 delta t -2
+execution time 332
+Executed local search 92 execution time 332
+task_to_move 17 89
+new pos 88 delta t -1
+execution time 332
+Executed local search 93 execution time 332
+task_to_move 428 32
+new pos 31 delta t -1
+execution time 332
+Executed local search 94 execution time 332
+task_to_move 482 154
+new pos 153 delta t -1
+execution time 332
+Executed local search 95 execution time 332
+task_to_move 7 36
+new pos 30 delta t -6
+execution time 332
+Executed local search 96 execution time 332
+task_to_move 496 72
+new pos 67 delta t -5
+execution time 332
+Executed local search 97 execution time 332
+task_to_move 329 20
+new pos 19 delta t -1
+execution time 332
+Executed local search 98 execution time 332
+task_to_move 77 92
+new pos 90 delta t -2
+execution time 332
+Executed local search 99 execution time 332
+task_to_move 39 76
+new pos 74 delta t -2
+execution time 332
+Executed local search 100 execution time 332
+task_to_move 506 62
+new pos 60 delta t -2
+execution time 332
+Executed local search 101 execution time 332
+task_to_move 463 20
+new pos 19 delta t -1
+execution time 332
+Executed local search 102 execution time 332
+task_to_move 10 64
+new pos 60 delta t -4
+execution time 332
+Executed local search 103 execution time 332
+task_to_move 132 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 104 execution time 332
+task_to_move 242 16
+new pos 15 delta t -1
+execution time 332
+Executed local search 105 execution time 332
+task_to_move 95 86
+new pos 83 delta t -3
+execution time 332
+Executed local search 106 execution time 332
+task_to_move 295 3
+new pos 2 delta t -1
+execution time 332
+Executed local search 107 execution time 332
+task_to_move 476 66
+new pos 62 delta t -4
+execution time 332
+Executed local search 108 execution time 332
+task_to_move 574 96
+new pos 93 delta t -3
+execution time 332
+Executed local search 109 execution time 332
+task_to_move 478 112
+new pos 111 delta t -1
+execution time 332
+Executed local search 110 execution time 332
+task_to_move 422 24
+new pos 23 delta t -1
+execution time 332
+Executed local search 111 execution time 332
+task_to_move 309 30
+new pos 29 delta t -1
+execution time 332
+Executed local search 112 execution time 332
+task_to_move 38 108
+new pos 107 delta t -1
+execution time 332
+Executed local search 113 execution time 332
+task_to_move 317 4
+new pos 2 delta t -2
+execution time 332
+Executed local search 114 execution time 332
+task_to_move 290 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 115 execution time 332
+task_to_move 176 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 116 execution time 332
+task_to_move 331 12
+new pos 11 delta t -1
+execution time 332
+Executed local search 117 execution time 332
+task_to_move 570 91
+new pos 90 delta t -1
+execution time 332
+Executed local search 118 execution time 332
+task_to_move 75 104
+new pos 101 delta t -3
+execution time 332
+Executed local search 119 execution time 332
+task_to_move 308 11
+new pos 10 delta t -1
+execution time 332
+Executed local search 120 execution time 332
+task_to_move 22 106
+new pos 105 delta t -1
+execution time 332
+Executed local search 121 execution time 332
+task_to_move 464 8
+new pos 7 delta t -1
+execution time 332
+Executed local search 122 execution time 332
+task_to_move 264 5
+new pos 4 delta t -1
+execution time 332
+Executed local search 123 execution time 332
+task_to_move 309 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 124 execution time 332
+task_to_move 414 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 125 execution time 332
+task_to_move 497 110
+new pos 109 delta t -1
+execution time 332
+Executed local search 126 execution time 332
+task_to_move 371 18
+new pos 15 delta t -3
+execution time 332
+Executed local search 127 execution time 332
+task_to_move 474 124
+new pos 123 delta t -1
+execution time 332
+Executed local search 128 execution time 332
+task_to_move 413 16
+new pos 15 delta t -1
+execution time 332
+Executed local search 129 execution time 332
+task_to_move 214 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 130 execution time 332
+task_to_move 287 18
+new pos 17 delta t -1
+execution time 332
+Executed local search 131 execution time 332
+task_to_move 311 28
+new pos 27 delta t -1
+execution time 332
+Executed local search 132 execution time 332
+task_to_move 478 76
+new pos 62 delta t -14
+execution time 332
+Executed local search 133 execution time 332
+task_to_move 133 11
+new pos 10 delta t -1
+execution time 332
+Executed local search 134 execution time 332
+task_to_move 332 10
+new pos 9 delta t -1
+execution time 332
+Executed local search 135 execution time 332
+task_to_move 505 76
+new pos 73 delta t -3
+execution time 332
+Executed local search 136 execution time 332
+task_to_move 332 9
+new pos 8 delta t -1
+execution time 332
+Executed local search 137 execution time 332
+task_to_move 287 12
+new pos 10 delta t -2
+execution time 332
+Executed local search 138 execution time 332
+task_to_move 121 90
+new pos 89 delta t -1
+execution time 332
+Executed local search 139 execution time 332
+task_to_move 309 16
+new pos 14 delta t -2
+execution time 332
+Executed local search 140 execution time 332
+task_to_move 331 28
+new pos 27 delta t -1
+execution time 332
+Executed local search 141 execution time 332
+task_to_move 266 13
+new pos 11 delta t -2
+execution time 332
+Executed local search 142 execution time 332
+task_to_move 581 50
+new pos 46 delta t -4
+execution time 332
+Executed local search 143 execution time 332
+task_to_move 590 106
+new pos 105 delta t -1
+execution time 332
+Executed local search 144 execution time 332
+task_to_move 527 55
+new pos 52 delta t -3
+execution time 332
+Executed local search 145 execution time 332
+task_to_move 61 63
+new pos 61 delta t -2
+execution time 332
+Executed local search 146 execution time 332
+task_to_move 287 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 147 execution time 332
+task_to_move 551 78
+new pos 74 delta t -4
+execution time 332
+Executed local search 148 execution time 332
+task_to_move 84 57
+new pos 55 delta t -2
+execution time 332
+Executed local search 149 execution time 332
+task_to_move 526 68
+new pos 67 delta t -1
+execution time 332
+Executed local search 150 execution time 332
+task_to_move 111 84
+new pos 83 delta t -1
+execution time 332
+Executed local search 151 execution time 332
+task_to_move 477 66
+new pos 58 delta t -8
+execution time 332
+Executed local search 152 execution time 332
+task_to_move 326 17
+new pos 16 delta t -1
+execution time 332
+Executed local search 153 execution time 332
+task_to_move 249 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 154 execution time 332
+task_to_move 263 27
+new pos 26 delta t -1
+execution time 332
+Executed local search 155 execution time 332
+task_to_move 574 62
+new pos 60 delta t -2
+execution time 332
+Executed local search 156 execution time 332
+task_to_move 19 94
+new pos 92 delta t -2
+execution time 332
+Executed local search 157 execution time 332
+task_to_move 376 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 158 execution time 332
+task_to_move 274 90
+new pos 89 delta t -1
+execution time 332
+Executed local search 159 execution time 332
+task_to_move 397 18
+new pos 15 delta t -3
+execution time 332
+Executed local search 160 execution time 332
+task_to_move 317 11
+new pos 10 delta t -1
+execution time 332
+Executed local search 161 execution time 332
+task_to_move 145 74
+new pos 71 delta t -3
+execution time 332
+Executed local search 162 execution time 332
+task_to_move 118 105
+new pos 102 delta t -3
+execution time 332
+Executed local search 163 execution time 332
+task_to_move 371 21
+new pos 18 delta t -3
+execution time 332
+Executed local search 164 execution time 332
+task_to_move 332 14
+new pos 12 delta t -2
+execution time 332
+Executed local search 165 execution time 332
+task_to_move 133 15
+new pos 14 delta t -1
+execution time 332
+Executed local search 166 execution time 332
+task_to_move 312 28
+new pos 27 delta t -1
+execution time 332
+Executed local search 167 execution time 332
+task_to_move 307 28
+new pos 27 delta t -1
+execution time 332
+Executed local search 168 execution time 332
+task_to_move 266 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 169 execution time 332
+task_to_move 243 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 170 execution time 332
+task_to_move 311 15
+new pos 14 delta t -1
+execution time 332
+Executed local search 171 execution time 332
+task_to_move 389 82
+new pos 81 delta t -1
+execution time 332
+Executed local search 172 execution time 332
+task_to_move 306 12
+new pos 11 delta t -1
+execution time 332
+Executed local search 173 execution time 332
+task_to_move 167 80
+new pos 77 delta t -3
+execution time 332
+Executed local search 174 execution time 332
+task_to_move 487 112
+new pos 110 delta t -2
+execution time 332
+Executed local search 175 execution time 332
+task_to_move 572 60
+new pos 58 delta t -2
+execution time 332
+Executed local search 176 execution time 332
+task_to_move 168 85
+new pos 84 delta t -1
+execution time 332
+Executed local search 177 execution time 332
+task_to_move 517 74
+new pos 71 delta t -3
+execution time 332
+Executed local search 178 execution time 332
+task_to_move 76 68
+new pos 66 delta t -2
+execution time 332
+Executed local search 179 execution time 332
+task_to_move 555 132
+new pos 95 delta t -37
+execution time 332
+Executed local search 180 execution time 332
+task_to_move 537 84
+new pos 77 delta t -7
+execution time 332
+Executed local search 181 execution time 332
+task_to_move 34 88
+new pos 86 delta t -2
+execution time 332
+Executed local search 182 execution time 332
+task_to_move 289 9
+new pos 8 delta t -1
+execution time 332
+Executed local search 183 execution time 332
+task_to_move 307 13
+new pos 12 delta t -1
+execution time 332
+Executed local search 184 execution time 332
+task_to_move 236 17
+new pos 14 delta t -3
+execution time 332
+Executed local search 185 execution time 332
+task_to_move 516 60
+new pos 57 delta t -3
+execution time 332
+Executed local search 186 execution time 332
+task_to_move 497 97
+new pos 96 delta t -1
+execution time 332
+Executed local search 187 execution time 332
+task_to_move 195 19
+new pos 18 delta t -1
+execution time 332
+Executed local search 188 execution time 332
+task_to_move 474 90
+new pos 88 delta t -2
+execution time 332
+Executed local search 189 execution time 332
+task_to_move 360 19
+new pos 18 delta t -1
+execution time 332
+Executed local search 190 execution time 332
+task_to_move 19 64
+new pos 63 delta t -1
+execution time 332
+Executed local search 191 execution time 332
+task_to_move 62 114
+new pos 113 delta t -1
+execution time 332
+Executed local search 192 execution time 332
+task_to_move 536 63
+new pos 62 delta t -1
+execution time 332
+Executed local search 193 execution time 332
+task_to_move 291 16
+new pos 14 delta t -2
+execution time 332
+Executed local search 194 execution time 332
+task_to_move 418 18
+new pos 17 delta t -1
+execution time 332
+Executed local search 195 execution time 332
+task_to_move 371 17
+new pos 16 delta t -1
+execution time 332
+Executed local search 196 execution time 332
+task_to_move 77 108
+new pos 107 delta t -1
+execution time 332
+Executed local search 197 execution time 332
+task_to_move 307 18
+new pos 17 delta t -1
+execution time 332
+Executed local search 198 execution time 332
+task_to_move 329 27
+new pos 25 delta t -2
+execution time 332
+Executed local search 199 execution time 332
+task_to_move 142 104
+new pos 103 delta t -1
+execution time 332
+Executed local search 200 execution time 332
+task_to_move 77 52
+new pos 51 delta t -1
+execution time 332
+Executed local search 201 execution time 332
+task_to_move 549 80
+new pos 78 delta t -2
+execution time 332
+Executed local search 202 execution time 332
+task_to_move 111 96
+new pos 95 delta t -1
+execution time 332
+Executed local search 203 execution time 332
+task_to_move 101 104
+new pos 103 delta t -1
+execution time 332
+Executed local search 204 execution time 332
+task_to_move 41 114
+new pos 113 delta t -1
+execution time 332
+Executed local search 205 execution time 332
+task_to_move 464 13
+new pos 12 delta t -1
+execution time 332
+Executed local search 206 execution time 332
+task_to_move 268 20
+new pos 19 delta t -1
+execution time 332
+Executed local search 207 execution time 332
+task_to_move 355 29
+new pos 27 delta t -2
+execution time 332
+Executed local search 208 execution time 332
+task_to_move 19 72
+new pos 71 delta t -1
+execution time 332
+Executed local search 209 execution time 332
+task_to_move 265 27
+new pos 26 delta t -1
+execution time 332
+Executed local search 210 execution time 332
+task_to_move 263 15
+new pos 14 delta t -1
+execution time 332
+Executed local search 211 execution time 332
+task_to_move 487 56
+new pos 53 delta t -3
+execution time 332
+Executed local search 212 execution time 332
+task_to_move 427 12
+new pos 10 delta t -2
+execution time 332
+Executed local search 213 execution time 332
+task_to_move 432 82
+new pos 75 delta t -7
+execution time 332
+Executed local search 214 execution time 332
+task_to_move 83 117
+new pos 116 delta t -1
+execution time 332
+Executed local search 215 execution time 332
+task_to_move 498 82
+new pos 78 delta t -4
+execution time 332
+Executed local search 216 execution time 332
+task_to_move 226 23
+new pos 22 delta t -1
+execution time 332
+Executed local search 217 execution time 332
+task_to_move 56 96
+new pos 95 delta t -1
+execution time 332
+Executed local search 218 execution time 332
+task_to_move 295 11
+new pos 10 delta t -1
+execution time 332
+Executed local search 219 execution time 332
+task_to_move 351 13
+new pos 11 delta t -2
+execution time 332
+Executed local search 220 execution time 332
+task_to_move 440 24
+new pos 23 delta t -1
+execution time 332
+Executed local search 221 execution time 332
+task_to_move 582 24
+new pos 20 delta t -4
+execution time 332
+Executed local search 222 execution time 332
+task_to_move 289 28
+new pos 27 delta t -1
+execution time 332
+Executed local search 223 execution time 332
+task_to_move 375 15
+new pos 14 delta t -1
+execution time 332
+Executed local search 224 execution time 332
+task_to_move 243 29
+new pos 28 delta t -1
+execution time 332
+Executed local search 225 execution time 332
+task_to_move 21 70
+new pos 69 delta t -1
+execution time 332
+Executed local search 226 execution time 332
+task_to_move 4 72
+new pos 70 delta t -2
+execution time 332
+Executed local search 227 execution time 332
+task_to_move 218 8
+new pos 7 delta t -1
+execution time 332
+Executed local search 228 execution time 332
+task_to_move 34 76
+new pos 73 delta t -3
+execution time 332
+Executed local search 229 execution time 332
+task_to_move 527 78
+new pos 75 delta t -3
+execution time 332
+Executed local search 230 execution time 332
+task_to_move 348 21
+new pos 19 delta t -2
+execution time 332
+Executed local search 231 execution time 332
+task_to_move 260 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 232 execution time 332
+task_to_move 405 14
+new pos 13 delta t -1
+execution time 332
+Executed local search 233 execution time 332
+task_to_move 479 78
+new pos 76 delta t -2
+execution time 332
+Executed local search 234 execution time 332
+task_to_move 554 45
+new pos 42 delta t -3
+execution time 332
+Executed local search 235 execution time 332
+task_to_move 574 84
+new pos 78 delta t -6
+execution time 332
+Executed local search 236 execution time 332
+task_to_move 483 142
+new pos 141 delta t -1
+execution time 332
+Executed local search 237 execution time 332
+task_to_move 20 68
+new pos 64 delta t -4
+execution time 332
+Executed local search 238 execution time 332
+task_to_move 114 76
+new pos 74 delta t -2
+execution time 332
+Executed local search 239 execution time 332
+task_to_move 479 78
+new pos 76 delta t -2
+execution time 332
+Executed local search 240 execution time 332
+task_to_move 279 62
+new pos 58 delta t -4
+execution time 332
+Executed local search 241 execution time 332
+task_to_move 412 13
+new pos 11 delta t -2
+execution time 332
+Executed local search 242 execution time 332
+task_to_move 244 15
+new pos 11 delta t -4
+execution time 332
+Executed local search 243 execution time 332
+task_to_move 325 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 244 execution time 332
+task_to_move 35 74
+new pos 73 delta t -1
+execution time 332
+Executed local search 245 execution time 332
+task_to_move 568 100
+new pos 98 delta t -2
+execution time 332
+Executed local search 246 execution time 332
+task_to_move 448 12
+new pos 11 delta t -1
+execution time 332
+Executed local search 247 execution time 332
+task_to_move 328 17
+new pos 16 delta t -1
+execution time 332
+Executed local search 248 execution time 332
+task_to_move 557 83
+new pos 82 delta t -1
+execution time 332
+Executed local search 249 execution time 332
+task_to_move 200 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 250 execution time 332
+task_to_move 392 15
+new pos 14 delta t -1
+execution time 332
+Executed local search 251 execution time 332
+task_to_move 580 68
+new pos 66 delta t -2
+execution time 332
+Executed local search 252 execution time 332
+task_to_move 95 79
+new pos 75 delta t -4
+execution time 332
+Executed local search 253 execution time 332
+task_to_move 106 80
+new pos 79 delta t -1
+execution time 332
+Executed local search 254 execution time 332
+task_to_move 517 72
+new pos 70 delta t -2
+execution time 332
+Executed local search 255 execution time 332
+task_to_move 94 80
+new pos 78 delta t -2
+execution time 332
+Executed local search 256 execution time 332
+task_to_move 576 81
+new pos 80 delta t -1
+execution time 332
+Executed local search 257 execution time 332
+task_to_move 570 104
+new pos 102 delta t -2
+execution time 332
+Executed local search 258 execution time 332
+task_to_move 280 20
+new pos 19 delta t -1
+execution time 332
+Executed local search 259 execution time 332
+task_to_move 266 7
+new pos 6 delta t -1
+execution time 332
+Executed local search 260 execution time 332
+task_to_move 367 18
+new pos 16 delta t -2
+execution time 332
+Executed local search 261 execution time 332
+task_to_move 494 98
+new pos 97 delta t -1
+execution time 332
+Executed local search 262 execution time 332
+task_to_move 101 88
+new pos 87 delta t -1
+execution time 332
+Executed local search 263 execution time 332
+task_to_move 399 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 264 execution time 332
+task_to_move 176 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 265 execution time 332
+task_to_move 137 12
+new pos 11 delta t -1
+execution time 332
+Executed local search 266 execution time 332
+task_to_move 203 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 267 execution time 332
+task_to_move 558 108
+new pos 107 delta t -1
+execution time 332
+Executed local search 268 execution time 332
+task_to_move 288 8
+new pos 7 delta t -1
+execution time 332
+Executed local search 269 execution time 332
+task_to_move 309 3
+new pos 2 delta t -1
+execution time 332
+Executed local search 270 execution time 332
+task_to_move 495 100
+new pos 98 delta t -2
+execution time 332
+Executed local search 271 execution time 332
+task_to_move 572 64
+new pos 63 delta t -1
+execution time 332
+Executed local search 272 execution time 332
+task_to_move 4 68
+new pos 67 delta t -1
+execution time 332
+Executed local search 273 execution time 332
+task_to_move 58 96
+new pos 95 delta t -1
+execution time 332
+Executed local search 274 execution time 332
+task_to_move 508 63
+new pos 60 delta t -3
+execution time 332
+Executed local search 275 execution time 332
+task_to_move 590 96
+new pos 94 delta t -2
+execution time 332
+Executed local search 276 execution time 332
+task_to_move 328 18
+new pos 16 delta t -2
+execution time 332
+Executed local search 277 execution time 332
+task_to_move 334 9
+new pos 8 delta t -1
+execution time 332
+Executed local search 278 execution time 332
+task_to_move 214 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 279 execution time 332
+task_to_move 330 11
+new pos 10 delta t -1
+execution time 332
+Executed local search 280 execution time 332
+task_to_move 118 61
+new pos 60 delta t -1
+execution time 332
+Executed local search 281 execution time 332
+task_to_move 326 20
+new pos 18 delta t -2
+execution time 332
+Executed local search 282 execution time 332
+task_to_move 8 46
+new pos 42 delta t -4
+execution time 332
+Executed local search 283 execution time 332
+task_to_move 330 32
+new pos 30 delta t -2
+execution time 332
+Executed local search 284 execution time 332
+task_to_move 450 70
+new pos 69 delta t -1
+execution time 332
+Executed local search 285 execution time 332
+task_to_move 284 15
+new pos 14 delta t -1
+execution time 332
+Executed local search 286 execution time 332
+task_to_move 40 70
+new pos 69 delta t -1
+execution time 332
+Executed local search 287 execution time 332
+task_to_move 436 26
+new pos 25 delta t -1
+execution time 332
+Executed local search 288 execution time 332
+task_to_move 312 28
+new pos 27 delta t -1
+execution time 332
+Executed local search 289 execution time 332
+task_to_move 417 12
+new pos 11 delta t -1
+execution time 332
+Executed local search 290 execution time 332
+task_to_move 20 72
+new pos 68 delta t -4
+execution time 332
+Executed local search 291 execution time 332
+task_to_move 58 94
+new pos 92 delta t -2
+execution time 332
+Executed local search 292 execution time 332
+task_to_move 358 12
+new pos 11 delta t -1
+execution time 332
+Executed local search 293 execution time 332
+task_to_move 330 7
+new pos 6 delta t -1
+execution time 332
+Executed local search 294 execution time 332
+task_to_move 331 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 295 execution time 332
+task_to_move 331 11
+new pos 10 delta t -1
+execution time 332
+Executed local search 296 execution time 332
+task_to_move 8 54
+new pos 48 delta t -6
+execution time 332
+Executed local search 297 execution time 332
+task_to_move 285 17
+new pos 16 delta t -1
+execution time 332
+Executed local search 298 execution time 332
+task_to_move 61 69
+new pos 68 delta t -1
+execution time 332
+Executed local search 299 execution time 332
+task_to_move 28 60
+new pos 59 delta t -1
+execution time 332
+Executed local search 300 execution time 332
+task_to_move 194 8
+new pos 7 delta t -1
+execution time 332
+Executed local search 301 execution time 332
+task_to_move 309 23
+new pos 21 delta t -2
+execution time 332
+Executed local search 302 execution time 332
+task_to_move 305 14
+new pos 13 delta t -1
+execution time 332
+Executed local search 303 execution time 332
+task_to_move 572 24
+new pos 1 delta t -23
+execution time 333
+Executed local search 304 execution time 332
+task_to_move 310 8
+new pos 7 delta t -1
+execution time 332
+Executed local search 305 execution time 332
+task_to_move 57 108
+new pos 107 delta t -1
+execution time 332
+Executed local search 306 execution time 332
+task_to_move 283 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 307 execution time 332
+task_to_move 497 54
+new pos 53 delta t -1
+execution time 332
+Executed local search 308 execution time 332
+task_to_move 432 80
+new pos 79 delta t -1
+execution time 332
+Executed local search 309 execution time 332
+task_to_move 17 101
+new pos 100 delta t -1
+execution time 332
+Executed local search 310 execution time 332
+task_to_move 264 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 311 execution time 332
+task_to_move 96 103
+new pos 102 delta t -1
+execution time 332
+Executed local search 312 execution time 332
+task_to_move 310 20
+new pos 19 delta t -1
+execution time 332
+Executed local search 313 execution time 332
+task_to_move 243 18
+new pos 17 delta t -1
+execution time 332
+Executed local search 314 execution time 332
+task_to_move 7 50
+new pos 46 delta t -4
+execution time 332
+Executed local search 315 execution time 332
+task_to_move 340 30
+new pos 21 delta t -9
+execution time 332
+Executed local search 316 execution time 332
+task_to_move 77 96
+new pos 95 delta t -1
+execution time 332
+Executed local search 317 execution time 332
+task_to_move 482 154
+new pos 153 delta t -1
+execution time 332
+Executed local search 318 execution time 332
+task_to_move 260 20
+new pos 19 delta t -1
+execution time 332
+Executed local search 319 execution time 332
+task_to_move 100 88
+new pos 84 delta t -4
+execution time 332
+Executed local search 320 execution time 332
+task_to_move 571 68
+new pos 67 delta t -1
+execution time 332
+Executed local search 321 execution time 332
+task_to_move 261 12
+new pos 11 delta t -1
+execution time 332
+Executed local search 322 execution time 332
+task_to_move 453 83
+new pos 80 delta t -3
+execution time 332
+Executed local search 323 execution time 332
+task_to_move 249 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 324 execution time 332
+task_to_move 354 11
+new pos 10 delta t -1
+execution time 332
+Executed local search 325 execution time 332
+task_to_move 350 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 326 execution time 332
+task_to_move 287 19
+new pos 18 delta t -1
+execution time 332
+Executed local search 327 execution time 332
+task_to_move 291 29
+new pos 28 delta t -1
+execution time 332
+Executed local search 328 execution time 332
+task_to_move 118 62
+new pos 61 delta t -1
+execution time 332
+Executed local search 329 execution time 332
+task_to_move 0 32
+new pos 1 delta t -31
+execution time 333
+Executed local search 330 execution time 332
+task_to_move 196 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 331 execution time 332
+task_to_move 8 56
+new pos 54 delta t -2
+execution time 332
+Executed local search 332 execution time 332
+task_to_move 332 6
+new pos 5 delta t -1
+execution time 332
+Executed local search 333 execution time 332
+task_to_move 291 29
+new pos 28 delta t -1
+execution time 332
+Executed local search 334 execution time 332
+task_to_move 549 94
+new pos 93 delta t -1
+execution time 332
+Executed local search 335 execution time 332
+task_to_move 508 76
+new pos 75 delta t -1
+execution time 332
+Executed local search 336 execution time 332
+task_to_move 506 90
+new pos 86 delta t -4
+execution time 332
+Executed local search 337 execution time 332
+task_to_move 218 11
+new pos 10 delta t -1
+execution time 332
+Executed local search 338 execution time 332
+task_to_move 405 14
+new pos 13 delta t -1
+execution time 332
+Executed local search 339 execution time 332
+task_to_move 243 12
+new pos 11 delta t -1
+execution time 332
+Executed local search 340 execution time 332
+task_to_move 532 77
+new pos 76 delta t -1
+execution time 332
+Executed local search 341 execution time 332
+task_to_move 312 18
+new pos 17 delta t -1
+execution time 332
+Executed local search 342 execution time 332
+task_to_move 376 28
+new pos 27 delta t -1
+execution time 332
+Executed local search 343 execution time 332
+task_to_move 570 52
+new pos 50 delta t -2
+execution time 332
+Executed local search 344 execution time 332
+task_to_move 401 13
+new pos 8 delta t -5
+execution time 332
+Executed local search 345 execution time 332
+task_to_move 397 14
+new pos 12 delta t -2
+execution time 332
+Executed local search 346 execution time 332
+task_to_move 464 15
+new pos 14 delta t -1
+execution time 332
+Executed local search 347 execution time 332
+task_to_move 222 15
+new pos 14 delta t -1
+execution time 332
+Executed local search 348 execution time 332
+task_to_move 285 14
+new pos 13 delta t -1
+execution time 332
+Executed local search 349 execution time 332
+task_to_move 555 126
+new pos 124 delta t -2
+execution time 332
+Executed local search 350 execution time 332
+task_to_move 295 11
+new pos 10 delta t -1
+execution time 332
+Executed local search 351 execution time 332
+task_to_move 323 74
+new pos 72 delta t -2
+execution time 332
+Executed local search 352 execution time 332
+task_to_move 58 70
+new pos 66 delta t -4
+execution time 332
+Executed local search 353 execution time 332
+task_to_move 375 23
+new pos 22 delta t -1
+execution time 332
+Executed local search 354 execution time 332
+task_to_move 484 130
+new pos 129 delta t -1
+execution time 332
+Executed local search 355 execution time 332
+task_to_move 307 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 356 execution time 332
+task_to_move 327 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 357 execution time 332
+task_to_move 252 72
+new pos 68 delta t -4
+execution time 332
+Executed local search 358 execution time 332
+task_to_move 65 100
+new pos 97 delta t -3
+execution time 332
+Executed local search 359 execution time 332
+task_to_move 581 30
+new pos 24 delta t -6
+execution time 332
+Executed local search 360 execution time 332
+task_to_move 579 35
+new pos 32 delta t -3
+execution time 332
+Executed local search 361 execution time 332
+task_to_move 289 17
+new pos 15 delta t -2
+execution time 332
+Executed local search 362 execution time 332
+task_to_move 9 58
+new pos 54 delta t -4
+execution time 332
+Executed local search 363 execution time 332
+task_to_move 289 27
+new pos 26 delta t -1
+execution time 332
+Executed local search 364 execution time 332
+task_to_move 517 84
+new pos 81 delta t -3
+execution time 332
+Executed local search 365 execution time 332
+task_to_move 96 48
+new pos 47 delta t -1
+execution time 332
+Executed local search 366 execution time 332
+task_to_move 462 20
+new pos 18 delta t -2
+execution time 332
+Executed local search 367 execution time 332
+task_to_move 76 97
+new pos 96 delta t -1
+execution time 332
+Executed local search 368 execution time 332
+task_to_move 313 24
+new pos 23 delta t -1
+execution time 332
+Executed local search 369 execution time 332
+task_to_move 353 29
+new pos 28 delta t -1
+execution time 332
+Executed local search 370 execution time 332
+task_to_move 82 112
+new pos 111 delta t -1
+execution time 332
+Executed local search 371 execution time 332
+task_to_move 384 32
+new pos 30 delta t -2
+execution time 332
+Executed local search 372 execution time 332
+task_to_move 310 8
+new pos 7 delta t -1
+execution time 332
+Executed local search 373 execution time 332
+task_to_move 244 25
+new pos 23 delta t -2
+execution time 332
+Executed local search 374 execution time 332
+task_to_move 56 104
+new pos 101 delta t -3
+execution time 332
+Executed local search 375 execution time 332
+task_to_move 355 26
+new pos 25 delta t -1
+execution time 332
+Executed local search 376 execution time 332
+task_to_move 117 110
+new pos 108 delta t -2
+execution time 332
+Executed local search 377 execution time 332
+task_to_move 497 68
+new pos 64 delta t -4
+execution time 332
+Executed local search 378 execution time 332
+task_to_move 94 93
+new pos 92 delta t -1
+execution time 332
+Executed local search 379 execution time 332
+task_to_move 335 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 380 execution time 332
+task_to_move 333 13
+new pos 12 delta t -1
+execution time 332
+Executed local search 381 execution time 332
+task_to_move 199 25
+new pos 24 delta t -1
+execution time 332
+Executed local search 382 execution time 332
+task_to_move 418 18
+new pos 17 delta t -1
+execution time 332
+Executed local search 383 execution time 332
+task_to_move 534 48
+new pos 46 delta t -2
+execution time 332
+Executed local search 384 execution time 332
+task_to_move 285 30
+new pos 29 delta t -1
+execution time 332
+Executed local search 385 execution time 332
+task_to_move 586 78
+new pos 76 delta t -2
+execution time 332
+Executed local search 386 execution time 332
+task_to_move 40 108
+new pos 107 delta t -1
+execution time 332
+Executed local search 387 execution time 332
+task_to_move 40 96
+new pos 93 delta t -3
+execution time 332
+Executed local search 388 execution time 332
+task_to_move 311 16
+new pos 15 delta t -1
+execution time 332
+Executed local search 389 execution time 332
+task_to_move 117 96
+new pos 95 delta t -1
+execution time 332
+Executed local search 390 execution time 332
+task_to_move 99 68
+new pos 66 delta t -2
+execution time 332
+Executed local search 391 execution time 332
+task_to_move 508 106
+new pos 104 delta t -2
+execution time 332
+Executed local search 392 execution time 332
+task_to_move 43 57
+new pos 56 delta t -1
+execution time 332
+Executed local search 393 execution time 332
+task_to_move 572 54
+new pos 50 delta t -4
+execution time 332
+Executed local search 394 execution time 332
+task_to_move 0 100
+new pos 97 delta t -3
+execution time 332
+Executed local search 395 execution time 332
+task_to_move 392 18
+new pos 17 delta t -1
+execution time 332
+Executed local search 396 execution time 332
+task_to_move 20 102
+new pos 101 delta t -1
+execution time 332
+Executed local search 397 execution time 332
+task_to_move 474 90
+new pos 88 delta t -2
+execution time 332
+Executed local search 398 execution time 332
+task_to_move 343 42
+new pos 38 delta t -4
+execution time 332
+Executed local search 399 execution time 332
+task_to_move 590 90
+new pos 89 delta t -1
+execution time 332
+Executed local search 400 execution time 332
+task_to_move 8 40
+new pos 35 delta t -5
+execution time 332
+Executed local search 401 execution time 332
+task_to_move 508 104
+new pos 103 delta t -1
+execution time 332
+Executed local search 402 execution time 332
+task_to_move 375 31
+new pos 29 delta t -2
+execution time 332
+Executed local search 403 execution time 332
+task_to_move 472 85
+new pos 84 delta t -1
+execution time 332
+Executed local search 404 execution time 332
+task_to_move 10 42
+new pos 40 delta t -2
+execution time 332
+Executed local search 405 execution time 332
+task_to_move 295 9
+new pos 7 delta t -2
+execution time 332
+Executed local search 406 execution time 332
+task_to_move 393 20
+new pos 17 delta t -3
+execution time 332
+Executed local search 407 execution time 332
+task_to_move 323 46
+new pos 40 delta t -6
+execution time 332
+Executed local search 408 execution time 332
+task_to_move 101 64
+new pos 62 delta t -2
+execution time 332
+Executed local search 409 execution time 332
+task_to_move 537 87
+new pos 85 delta t -2
+execution time 332
+Executed local search 410 execution time 332
+task_to_move 552 104
+new pos 98 delta t -6
+execution time 332
+Executed local search 411 execution time 332
+task_to_move 238 16
+new pos 14 delta t -2
+execution time 332
+Executed local search 412 execution time 332
+task_to_move 525 82
+new pos 80 delta t -2
+execution time 332
+Executed local search 413 execution time 332
+task_to_move 305 14
+new pos 13 delta t -1
+execution time 332
+Executed local search 414 execution time 332
+task_to_move 330 13
+new pos 11 delta t -2
+execution time 332
+Executed local search 415 execution time 332
+task_to_move 309 28
+new pos 27 delta t -1
+execution time 332
+Executed local search 416 execution time 332
+task_to_move 586 82
+new pos 81 delta t -1
+execution time 332
+Executed local search 417 execution time 332
+task_to_move 383 10
+new pos 8 delta t -2
+execution time 332
+Executed local search 418 execution time 332
+task_to_move 100 100
+new pos 99 delta t -1
+execution time 332
+Executed local search 419 execution time 332
+task_to_move 45 83
+new pos 82 delta t -1
+execution time 332
+Executed local search 420 execution time 332
+task_to_move 334 16
+new pos 15 delta t -1
+execution time 332
+Executed local search 421 execution time 332
+task_to_move 530 85
+new pos 84 delta t -1
+execution time 332
+Executed local search 422 execution time 332
+task_to_move 431 86
+new pos 85 delta t -1
+execution time 332
+Executed local search 423 execution time 332
+task_to_move 479 140
+new pos 139 delta t -1
+execution time 332
+Executed local search 424 execution time 332
+task_to_move 287 10
+new pos 8 delta t -2
+execution time 332
+Executed local search 425 execution time 332
+task_to_move 550 51
+new pos 50 delta t -1
+execution time 332
+Executed local search 426 execution time 332
+task_to_move 570 60
+new pos 59 delta t -1
+execution time 332
+Executed local search 427 execution time 332
+task_to_move 327 15
+new pos 13 delta t -2
+execution time 332
+Executed local search 428 execution time 332
+task_to_move 330 12
+new pos 10 delta t -2
+execution time 332
+Executed local search 429 execution time 332
+task_to_move 315 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 430 execution time 332
+task_to_move 287 14
+new pos 13 delta t -1
+execution time 332
+Executed local search 431 execution time 332
+task_to_move 267 13
+new pos 11 delta t -2
+execution time 332
+Executed local search 432 execution time 332
+task_to_move 1 58
+new pos 57 delta t -1
+execution time 332
+Executed local search 433 execution time 332
+task_to_move 248 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 434 execution time 332
+task_to_move 310 24
+new pos 21 delta t -3
+execution time 332
+Executed local search 435 execution time 332
+task_to_move 40 58
+new pos 56 delta t -2
+execution time 332
+Executed local search 436 execution time 332
+task_to_move 82 71
+new pos 66 delta t -5
+execution time 332
+Executed local search 437 execution time 332
+task_to_move 549 113
+new pos 112 delta t -1
+execution time 332
+Executed local search 438 execution time 332
+task_to_move 428 42
+new pos 37 delta t -5
+execution time 332
+Executed local search 439 execution time 332
+task_to_move 492 88
+new pos 84 delta t -4
+execution time 332
+Executed local search 440 execution time 332
+task_to_move 244 19
+new pos 17 delta t -2
+execution time 332
+Executed local search 441 execution time 332
+task_to_move 467 10
+new pos 9 delta t -1
+execution time 332
+Executed local search 442 execution time 332
+task_to_move 97 103
+new pos 102 delta t -1
+execution time 332
+Executed local search 443 execution time 332
+task_to_move 295 11
+new pos 10 delta t -1
+execution time 332
+Executed local search 444 execution time 332
+task_to_move 356 18
+new pos 17 delta t -1
+execution time 332
+Executed local search 445 execution time 332
+task_to_move 419 26
+new pos 25 delta t -1
+execution time 332
+Executed local search 446 execution time 332
+task_to_move 554 69
+new pos 66 delta t -3
+execution time 332
+Executed local search 447 execution time 332
+task_to_move 58 52
+new pos 50 delta t -2
+execution time 332
+Executed local search 448 execution time 332
+task_to_move 539 52
+new pos 50 delta t -2
+execution time 332
+Executed local search 449 execution time 332
+task_to_move 494 86
+new pos 84 delta t -2
+execution time 332
+Executed local search 450 execution time 332
+task_to_move 338 20
+new pos 19 delta t -1
+execution time 332
+Executed local search 451 execution time 332
+task_to_move 555 111
+new pos 108 delta t -3
+execution time 332
+Executed local search 452 execution time 332
+task_to_move 8 27
+new pos 26 delta t -1
+execution time 332
+Executed local search 453 execution time 332
+task_to_move 18 92
+new pos 89 delta t -3
+execution time 332
+Executed local search 454 execution time 332
+task_to_move 287 35
+new pos 32 delta t -3
+execution time 332
+Executed local search 455 execution time 332
+task_to_move 375 27
+new pos 26 delta t -1
+execution time 332
+Executed local search 456 execution time 332
+task_to_move 310 16
+new pos 13 delta t -3
+execution time 332
+Executed local search 457 execution time 332
+task_to_move 487 97
+new pos 96 delta t -1
+execution time 332
+Executed local search 458 execution time 332
+task_to_move 362 138
+new pos 137 delta t -1
+execution time 332
+Executed local search 459 execution time 332
+task_to_move 333 18
+new pos 17 delta t -1
+execution time 332
+Executed local search 460 execution time 332
+task_to_move 339 7
+new pos 5 delta t -2
+execution time 332
+Executed local search 461 execution time 332
+task_to_move 311 25
+new pos 23 delta t -2
+execution time 332
+Executed local search 462 execution time 332
+task_to_move 10 22
+new pos 17 delta t -5
+execution time 332
+Executed local search 463 execution time 332
+task_to_move 273 11
+new pos 9 delta t -2
+execution time 332
+Executed local search 464 execution time 332
+task_to_move 516 84
+new pos 81 delta t -3
+execution time 332
+Executed local search 465 execution time 332
+task_to_move 284 28
+new pos 27 delta t -1
+execution time 332
+Executed local search 466 execution time 332
+task_to_move 584 50
+new pos 48 delta t -2
+execution time 332
+Executed local search 467 execution time 332
+task_to_move 311 13
+new pos 12 delta t -1
+execution time 332
+Executed local search 468 execution time 332
+task_to_move 266 30
+new pos 29 delta t -1
+execution time 332
+Executed local search 469 execution time 332
+task_to_move 8 58
+new pos 56 delta t -2
+execution time 332
+Executed local search 470 execution time 332
+task_to_move 419 26
+new pos 25 delta t -1
+execution time 332
+Executed local search 471 execution time 332
+task_to_move 555 107
+new pos 106 delta t -1
+execution time 332
+Executed local search 472 execution time 332
+task_to_move 264 15
+new pos 13 delta t -2
+execution time 332
+Executed local search 473 execution time 332
+task_to_move 286 27
+new pos 26 delta t -1
+execution time 332
+Executed local search 474 execution time 332
+task_to_move 194 8
+new pos 7 delta t -1
+execution time 332
+Executed local search 475 execution time 332
+task_to_move 546 63
+new pos 62 delta t -1
+execution time 332
+Executed local search 476 execution time 332
+task_to_move 18 92
+new pos 89 delta t -3
+execution time 332
+Executed local search 477 execution time 332
+task_to_move 570 86
+new pos 85 delta t -1
+execution time 332
+Executed local search 478 execution time 332
+task_to_move 195 23
+new pos 22 delta t -1
+execution time 332
+Executed local search 479 execution time 332
+task_to_move 377 10
+new pos 9 delta t -1
+execution time 332
+Executed local search 480 execution time 332
+task_to_move 142 100
+new pos 99 delta t -1
+execution time 332
+Executed local search 481 execution time 332
+task_to_move 108 106
+new pos 105 delta t -1
+execution time 332
+Executed local search 482 execution time 332
+task_to_move 310 28
+new pos 27 delta t -1
+execution time 332
+Executed local search 483 execution time 332
+task_to_move 332 15
+new pos 14 delta t -1
+execution time 332
+Executed local search 484 execution time 332
+task_to_move 130 9
+new pos 6 delta t -3
+execution time 332
+Executed local search 485 execution time 332
+task_to_move 103 66
+new pos 65 delta t -1
+execution time 332
+Executed local search 486 execution time 332
+task_to_move 186 83
+new pos 80 delta t -3
+execution time 332
+Executed local search 487 execution time 332
+task_to_move 83 117
+new pos 116 delta t -1
+execution time 332
+Executed local search 488 execution time 332
+task_to_move 63 80
+new pos 78 delta t -2
+execution time 332
+Executed local search 489 execution time 332
+task_to_move 330 22
+new pos 21 delta t -1
+execution time 332
+Executed local search 490 execution time 332
+task_to_move 242 27
+new pos 26 delta t -1
+execution time 332
+Executed local search 491 execution time 332
+task_to_move 262 17
+new pos 16 delta t -1
+execution time 332
+Executed local search 492 execution time 332
+task_to_move 464 4
+new pos 3 delta t -1
+execution time 332
+Executed local search 493 execution time 332
+task_to_move 287 12
+new pos 10 delta t -2
+execution time 332
+Executed local search 494 execution time 332
+task_to_move 198 19
+new pos 18 delta t -1
+execution time 332
+Executed local search 495 execution time 332
+task_to_move 436 26
+new pos 25 delta t -1
+execution time 332
+Executed local search 496 execution time 332
+task_to_move 18 56
+new pos 54 delta t -2
+execution time 332
+Executed local search 497 execution time 332
+task_to_move 487 100
+new pos 99 delta t -1
+execution time 332
+Executed local search 498 execution time 332
+task_to_move 243 21
+new pos 20 delta t -1
+execution time 332
+Executed local search 499 execution time 332
+Execution time after local search: 332
+Number of steps that improve the scheduling: 0 out of 500
+Elapsed time 32134.643723487854
+
+
+Scheduling
