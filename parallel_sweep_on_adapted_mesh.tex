@@ -49,28 +49,38 @@
 % two different processors.
 \section{Introduction}
 When using the discrete ordinates method to discretize the transport equation,
-it is usually necessary to sweep multiple times through the mesh. If we assume 
-that the incident angular flux is specified on each incoming surface of the
-problem with no reflecting or periodic boundaries, sweeping through a mesh along
-a direction can be represented by a Directed Acyclic Graph (see \cref{tasks}).
+it is usually necessary to sweep multiple times through the mesh. A transport
+sweep inverts directly the steaming-plus-collision operator of the transport
+equation i.e., it computes $\Psi_{m,g}^{(l+1/2)}$ for all angle by solving:
+\begin{equation}
+  \bo_m\cdot\bn\Psi_{m,g}^{(l+1/2)}+\sigma_{t,g}\Psi_{m,g}^{(l+1/2)} =
+  q_{tot,m,g}^{(l)},
+\end{equation}
+where $q_{tot,m,g}^{(l)}$ includes the volumetric source and the scattering
+source evaluated using fluxes from a previous iterate (denoted by the
+superscript $l$).
+If the incident angular flux is known on each incoming surface of the
+problem and there are no reflecting or periodic boundaries, the dependency graph 
+associated with the sweep through a mesh
+along a direction is directed and acyclic, i.e the
+dependency graph is a DAG (see \cref{tasks}).
 \begin{figure}[H]
-  \begin{subfigure}[b]{.5\textwidth}
+  \begin{subfigure}[c]{.5\textwidth}
     \centering
     \includegraphics[width=5cm]{task_1}
   \end{subfigure}
-  \begin{subfigure}[b]{.5\textwidth}
+  \begin{subfigure}[c]{.5\textwidth}
     \centering
     \includegraphics[width=5cm]{task_2}
   \end{subfigure}
   \caption{Mesh and DAG associated to the sweep along two different directions.}
   \label{tasks}
 \end{figure}
-Therefore sweeping in
-parallel through a mesh can be viewed as a resource-constrained project
-scheduling problem (RCPSP) \cite{Brucker1999,Kolisch2006} where the constraints
-are given by the DAG and by the fact that a processor cannot execute two tasks
-(vertices of the DAG) at the same time. 
-The goal of RCPSP is to schedule the tasks such that all the constraints are
+Sweeping in parallel through a mesh can be viewed as a resource-constrained
+project scheduling problem (RCPSP) \cite{Brucker1999,Kolisch2006} where the
+constraints are given by multiple DAG (one for each direction) and by the fact
+that a processor cannot execute two tasks (vertices of the DAG) at the same
+time. The goal of RCPSP is to schedule the tasks such that all the constraints are
 satisfied and that the time required to execute all the tasks is minimal. 
 RCPSP has been extensively studied for more than four decades \cite{Pritsker1969} but most
 sweeping algorithms have been developed independently of these researches. 
@@ -98,12 +108,14 @@ produced by deal.II \cite{Bangerth2007,Bangerth2013} and p4est
 uses the p4est library for the partitioning. The rest of this paper is organized
 as follows: in \Cref{parallel_sweeps}, we explain the CAP-PFB algorithm
 introduced in \cite{Mo2014} and we show how to apply it to adapted mesh. In
-\Cref{results}, we show some results, first on an uniform mesh where the optimal
+\Cref{results}, we compare the results obtained with CAP-PFB using different initial sweeps, first on 
+an uniform mesh where the optimal
 solution is known and then, on meshes more typical of what is obtained using
 AMR. We end with our conclusions in \Cref{conclusions}.
 
 
 \section{Parallel sweeps on AMR mesh} \label{parallel_sweeps}
+
 \subsection{CAP-PFB algorithm}
 In this Section, we explain the CAP-PFB (Cut Arc Preference - Parallel Forward
 Backward) algorithm introduced in \cite{Mo2014}. We will start with the general
@@ -114,9 +126,9 @@ tasks as soon as possible, a lot of work is done at the beginning of the
 schedule but it quickly decreases and there is only few tasks to perform later
 on. The opposite is true when we try to execute the tasks as late as possible,
 few tasks are performed at the beginning but a lot of them are done at the end
-of the schedule. The idea of the FB iterations is to alternate a phase where the
-tasks are executed as late as possible (backward iteration) with a phase where the
-tasks are executed as early as possible (forward iteration)\footnote{The
+of the schedule. The idea beyond the FB algorithm is to alternate a phase where the
+tasks are scheduled as late as possible (backward iteration) with a phase where the
+tasks are scheduled as early as possible (forward iteration)\footnote{The
 original algorithm applied the forward iteration first.}. The hope is
 that we will get a more constant distribution of the work and therefore,
 decrease the time needed to execute all the tasks. The algorithm works as
@@ -159,10 +171,11 @@ graph) owned by different processors. The ranks as computed as follows:
 \end{description}
 PFB works exactly the same way as FB but it assumes that the tasks are
 distributed among processors.
+
 \subsection{CAP-PFB on adapted mesh}
-In \Cref{subdomain_id}, we show the partitioning of mesh using deal.II and p4est 
+In \Cref{subdomain_id}, we show a mesh and its partitioning generated by deal.II and p4est 
 on 16 processors. This is a typical mesh produced by these libraries and it is
-representative of the case that we want to tackle (the problem solved is a
+representative of the case that we want to tackle (the problem solved here is a
 simple Laplace equation but the mesh and the partition are rather typical). 
 \begin{figure}[H]
   \begin{subfigure}[b]{.5\textwidth}
@@ -175,34 +188,41 @@ simple Laplace equation but the mesh and the partition are rather typical).
     \includegraphics[width=5cm]{subdomain_id_1}
     \caption{Partitioning.}
   \end{subfigure}
-  \caption{Partitioning and mesh using 16 processors for a typical problem
-  (Step-40 of deal.II).}
+  \caption{Partitioning and mesh using 16 processors (Step-40 of deal.II).}
   \label{subdomain_id}
 \end{figure}
 We can see that the domain owned by each processors are not convex and that some
 processors own disjoint domains. In \cite{Mo2014}, the authors studied CAP-PFB
 when all the tasks have an equal amount of work to execute. In this case,
-CAP-PFB is guarantee to converge some scheduling. This can be achieved by using
+CAP-PFB is guarantee to converge to some scheduling. Here, this can be achieved by using
 tasks that are associated to only one cell. However, this will create an
-excessive amount of messages which will negatively impact the performance
-\cite{Pautz2002}. Therefore, it is necessary to have tasks that cover more than
-one cells. On a totally unstructured mesh, gathering cells to form convex zones
+excessive amount of communication between processors which will negatively impact the performance
+\cite{Pautz2002}. Therefore, it is necessary to have tasks that own more than
+one cell. On a totally unstructured mesh, gathering cells to form convex zones
 can be a hard problem. However, this can be easily done on an AMR mesh since the
 children of a coarse cell can be gather to form a convex zone, i.e. the parent
 cell. It is of course necessary that all the children are owned by the same
-processor. Otherwise, a task would span over multiple processors. This process
-can be extended to grand-children, great-grand-children, etc. This will create
+processor. Otherwise, a task would span over multiple processors. The coarsening
+can be extended to grand-parent, great-grand-parent, etc. This process will create
 tasks that have very different numbers of cells associated to them either
 because some cells have less ancestors or because some cells that have a common
-ancestors are owned by different processors. Having tasks containing different
+ancestor are owned by different processors. Having tasks containing different
 numbers of cells can be  taken into account in CAP-PFB but the resulting
 algorithm loses its convergence property. We will show in \Cref{results} that
-the number of stages, i.e. the number of steps needed to sweep through the mesh, of successive scheduling oscillates. Because the best
-solution can be obtained after a poor one, it is hard to check for convergence.
-To fix this undesirable behavior, scheduling that increase the number of stages
-will be rejected and instead, the best scheduling will be used by the following
-forward/backward iteration.
+the number of stages, i.e. the number of steps needed to sweep through the mesh,
+of successive scheduling oscillates.
 
+\subsection{Initial sweeps}
+We will compare the results of CAP-PFB using different initial sweeps:
+\begin{description}
+  \item[serial:] this sweep is the same as a serial sweep, we sweep one
+    direction at the time and at any given time only one task is executed. We
+    will refer to it as \emph{serial}.
+  \item[random:] two initial sweeps are generated randomly. We will refer to
+    them as \emph{random1} and \emph{random2}
+  \item[interleaved DFDS:] this sweep is defined in \cite{Pautz2002}. We will
+    refer to it as \emph{iDFDS}.
+\end{description}
 
 \section{Results} \label{results}
 In this Section, we look at the number of stages produced by the CAP-PFB
@@ -212,39 +232,41 @@ look at the ordering on AMR meshes. In all the tests, the domain is square and
 we use a $S_8$ quadrature, i.e. 40 directions. When CAP-PFB is known to have an
 oscillatory behavior, we will performed 20 CAP-PFB iterations. Otherwise, we
 will stop when an iteration does not improve the scheduling.
+
 \subsection{Uniform mesh}
 In this test, we compare the number of stages on an uniform two-dimensional mesh 
 where each processors owns 40 tasks (one task for each direction). In this
 setup, the optimal number of stages is given by \cite{Adams2013}:
 \begin{equation}
-  \mu = P_x + P_y - 4 + N_{\textrm{task}},
+  \mu = P_x + P_y - 4 + N_{\textrm{tasks}},
 \end{equation}
-with $P_x \times P_y$ the process grid and $N_{\textrm{task}}$ the number of
-tasks that each processors has to executed. Because CAP-PFB
-is an heuristic that requires an initial scheduling, we use three different
-initial scheduling for each test. In \Cref{uniform}, we compare the number of
+with $P_x \times P_y$ the process grid and $N_{\textrm{tasks}}$ the number of
+tasks that each processors has to executed. In \Cref{uniform}, we compare the number of
 stages obtained using CAP-PFB to the optimal solution for different meshes.
 % Order of results: no seed, seed = 0, seed = 1.
-% TODO: if enough time do 70 \times 70 it should be much faster now
 \begin{table}[H]
   \begin{center}
-    \begin{tabular}{|c|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|c|}
       \hline
-      N. procs & Init. n. stages & Final n. stages & Optimal n. stages & Iter. \\
+      N. procs & Init. sweep & Init. n. stages & Final n. stages & Optimal n. stages & Iter. \\
       \hline
-      $10\times 10$ &  580 &  56 &  56 & 1 \\
-      $10\times 10$ &  155 &  56 &  56 & 2 \\
-      $10\times 10$ &  153 &  56 &  56 & 1 \\
-      $30\times 30$ & 1780 &  96 &  96 & 1 \\
-      $30\times 30$ &  392 &  96 &  96 & 2 \\
-      $30\times 30$ &  376 &  96 &  96 & 2 \\
-      $50\times 50$ & 2980 & 136 & 136 & 1 \\
-      $50\times 50$ &  570 & 136 & 136 & 2 \\ 
-      $50\times 50$ &  573 & 136 & 136 & 2 \\
+      $10\times 10$ & \emph{serial}  &   4000 &  56 &  56 & 1 \\
+      $10\times 10$ & \emph{random1} &    155 &  56 &  56 & 2 \\
+      $10\times 10$ & \emph{random2} &    153 &  56 &  56 & 1 \\
+      $10\times 10$ & \emph{iDFDS}   &     56 &  56 &  56 & 0 \\
+      $30\times 30$ & \emph{serial}  &  36000 &  96 &  96 & 1 \\
+      $30\times 30$ & \emph{random1} &    392 &  96 &  96 & 2 \\
+      $30\times 30$ & \emph{random2} &    376 &  96 &  96 & 2 \\
+      $30\times 30$ & \emph{iDFDS}   &     96 &  96 &  96 & 0 \\
+      $50\times 50$ & \emph{serial}  & 100000 & 136 & 136 & 1 \\
+      $50\times 50$ & \emph{random1} &    570 & 136 & 136 & 2 \\ 
+      $50\times 50$ & \emph{random2} &    573 & 136 & 136 & 2 \\
+      $50\times 50$ & \emph{iDFDS}   &    136 & 136 & 136 & 0 \\
       \hline
     \end{tabular}
     \caption{Number of stages required to sweep through an uniform mesh.
-      \emph{N. procs} is the number of processors, \emph{Init. n. stages} is the
+      \emph{N. procs} is the number of processors, \emph{Init. sweep} is the
+      method used to produce the initial sweeep, \emph{Init. n. stages} is the
       number of stages of the initial scheduling, \emph{Final n. stages} is the
       number of stages of the final scheduling, \emph{Optimal n. stages} is the
       number of stages of the optimal scheduling, and \emph{Iter.} is the number
@@ -253,9 +275,11 @@ stages obtained using CAP-PFB to the optimal solution for different meshes.
   \end{center}
 \end{table}
 We can see that the heuristic converges to the optimal solution in only one or
-two iterations for every initial scheduling. Even if the number of stages is
+two iterations for every initial scheduling. \emph{iDFDS} finds the optimal
+scheduling without CAP-PFB. Even though the number of stages is
 identical, the final scheduling obtained using different initial scheduling are
-different.
+different. 
+% Try to say more...
 
 \subsection{First AMR test}
 In this test, the cells in the middle of the domain are refined (\Cref{mesh_1}).
@@ -272,28 +296,30 @@ First, we test the case where each processors owns 160 tasks (\Cref{amr_1}). For
 this mesh the optimal number of stages is not know but we can have an idea of
 the minimal number stages by counting the minimum number of stages before the
 central processors can start working ($N_{fill}$)
-and the number of tasks own by each of the central processors ($N_{tasks}$). In
-this case, we get: Minimal numbers of stages is $2\times N_{fill}+N_{tasks}$
+and the number of tasks own by each of the central processors. In
+this case, we get: Minimal numbers of stages (\emph{Minimal n. stages}) is $2\times N_{fill}+N_{tasks}$
 \cite{Adams2013}. Because the mesh is not uniform it is not obvious that this
 minimum can be achieved. 
-% N_{fill} = 24
+% N_{fill} = 30
 % N_{tasks} = 160
-% N_{fill} = 56
-% N_{tasks} = 268
+% N_{fill} = 65
+% N_{tasks} = 160
 % Order of results: no seed, seed = 0, seed = 1.
 % Table for amr_0 = refined mesh in the middle have NOT been gather
 \begin{table}[H]
   \begin{center}
-    \begin{tabular}{|c|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|c|}
       \hline
-      N.procs & Init. n. stages & Final n. stages & Minimal n. stages & Iter. \\
+      N.procs & Init. sweep & Init. n. stages & Final n. stages & Minimal n. stages & Iter. \\
       \hline
-      148 & 1870 & 238 & 208 & 2 \\
-      148 &  911 & 247 & 208 & 3 \\
-      148 &  923 & 246 & 208 & 3 \\
-      592 & 3820 & 332 & 268 & 3 \\
-      592 & 1552 & 336 & 268 & 6 \\
-      592 & 1598 & 341 & 268 & 4 \\
+      148 &  \emph{serial} & 23680 & 238 & 220 & 4 \\
+      148 & \emph{random1} &   911 & 247 & 220 & 3 \\
+      148 & \emph{random2} &   923 & 246 & 220 & 3 \\
+      148 &   \emph{iDFDS} &   430 & 246 & 220 & 4 \\
+      592 &  \emph{serial} & 94720 & 332 & 290 & 3 \\
+      592 & \emph{random1} &  1552 & 336 & 290 & 6 \\
+      592 & \emph{random2} &  1598 & 341 & 290 & 4 \\
+      592 &   \emph{iDFDS} & \red{xxxxx} & \red{xxx} & \red{290} & \red{x} \\
       \hline
     \end{tabular}
     \caption{Number of stages required to sweep through a mesh refined
@@ -302,33 +328,41 @@ minimum can be achieved.
   \end{center}
 \end{table}
 We can see that different initial sweeps produce sweeps requiring different
-number of stages. The best results are obtained when the initial sweep goes
+number of stages. The best results are obtained for \emph{serial} because we go
 through the mesh along one direction at the time. In the others cases, the sweep
 can stall at the beginning because instead of pushing the front wave forward and
 allowing other processors to start working, tasks on the corners of the domain
 are executed first. This slows downs the front wave. The sensitivity of the
 algorithm to the initial sweep is due to the fact that the order of tasks that
 have the same ranks cannot be changed. This allows to make sure the precedence
-relationships are always satisfied without having to check them. 
+relationships are always satisfied without having to check them. \emph{serial}
+gives results that 10\% and 15\% above the minimal number of stages.
+\emph{iDFDS} creates by far the best initial schedule but it does not give the
+best final schedule.
 
 Next, the tasks in the refined area are gathered together. Therefore, the
 processors of this zone do not own 160 tasks, each requiring one unit of work to
 be executed, but 40 tasks, each requiring four units of work to be executed
-(\Cref{amr_2}). 
+(\Cref{amr_2}). Because the heuristic oscillates, we will stop after 20
+iterations. \red{We can also compute the
+minimum number of stages but instead of using $N_{fill}$ and $N_{tasks}$ must
+take into account that some tasks have four units of works instead of one.}
 % Order of results: no seed, seed = 0, seed = 1.
 % Table for amr_1 and amr_3 = refined mesh in the middle have been gather
 \begin{table}[H]
   \begin{center}
-    \begin{tabular}{|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|c|}
       \hline
-      N.procs & Init. n. stages & Final n. stages & Iter. \\
+      N.procs & Init. sweep & Init. n. stages & Final n. stages & Minimal n. stages & Iter. \\
       \hline
-      148 & 2760 & 238 & 3  \\
-      148 & 804  & 250 & 2  \\
-      148 & 788  & 244 & 4  \\
-      592 & 5520 & 332 & 3  \\
-      592 & 1402 & 335 & 11 \\
-      592 & 1364 & 332 & 9  \\
+      148 &  \emph{serial} & 23680 & 238 & 238 &  3 \\
+      148 & \emph{random1} &   804 & 250 & 238 &  2 \\
+      148 & \emph{random2} &   788 & 244 & 238 &  4 \\
+      148 &   \emph{iDFDS} &   419 & 252 & 238 &  5 \\
+      592 &  \emph{serial} & 94720 & 332 & 332 &  3 \\
+      592 & \emph{random1} &  1402 & 335 & 332 & 11 \\
+      592 & \emph{random2} &  1364 & 332 & 332 &  9 \\
+      592 &   \emph{iDFDS} &   726 & 348 & 332 &  5 \\
       \hline
     \end{tabular}
     \caption{Number of stages required to sweep through a mesh refined in the
@@ -340,6 +374,10 @@ be executed, but 40 tasks, each requiring four units of work to be executed
 It is remarkable that in some cases gathering the tasks improves the scheduling
 and only one case the performance is degraded. This is not what we would expect
 intuitively, since having the tasks gathered reduces the granularity.
+\red{Using x random initial sweeps followed by 20 iterations of
+CAP-PFB, the best result when using 148 processors is x.} So with \emph{serial}
+the optimal solution is obtained. The worst solution is obtained with
+\emph{iDFDS} which is by far the best initial schedule.
 
 \Cref{convergence_central_148,convergence_central_592} show the number of stages
 as a function of the number of CAP-PFB iterations. When 148 processors are used,
@@ -362,42 +400,8 @@ ordering produced when the algorithm seems to converge.
   \label{convergence_central_592}
   \end{subfigure}
   \caption{Number of stages as a function of the number of CAP-PFB iterations.
-  Half iterations correspond to backward iterations. Different colors correspond
-  to different initial scheduling.}
+  Half iterations correspond to backward iterations.}
 \end{figure}
-
-In the last case studied for this test, we do not allow for oscillations. If a
-backward iteration, resp. forward iteration, produces a sweep worse than the
-previous sweep, that sweep is disregarded and the best sweep is used in the
-following forward iteration, resp. backward iteration. The results are shown in 
-\Cref{amr_3}.
-% Order of results: no seed, seed = 0, seed = 1.
-% Table for new_amr_1 and new_amr_3 = refined mesh in the middle have been gather
-\begin{table}[H]
-  \begin{center}
-    \begin{tabular}{|c|c|c|c|}
-      \hline
-      N.procs & Init. n. stages & Final n. stages & Iter. \\
-      \hline
-      148 & 2760 & 238 & 3 \\
-      148 & 804  & 250 & 2 \\
-      148 & 788  & 249 & 2 \\
-      592 & 5520 & 332 & 3 \\
-      592 & 1402 & 351 & 3 \\
-      592 & 1364 & 337 & 6 \\
-      \hline
-    \end{tabular}
-    \caption{Number of stages required to sweep through a mesh refined in the
-      middle of the domain after gathering of the tasks without oscillations
-    allowed.}
-    \label{amr_3}
-  \end{center}
-\end{table}
-\red{There are three cases where the best scheduling is obtained after a
-non-monotonic decrease, in one of them the best scheduling is obtained with the
-new method. In the other two cases, the solution is the best scheduling obtained
-in during the monotone phase. The convergence at 249 is a false convergence due
-to the fact that two iterations in a row we get the same number of stages.}
 
 
 \subsection{Second AMR test}
@@ -480,8 +484,60 @@ we show the convergence of CAP-PFB.
 \end{figure}
  
 We can see that the convergence is smoother and much faster when using more
-processors which is the opposite of what we had in the previous test. In
-\Cref{band_3}, we show the results when oscillations are not allowed.
+processors which is the opposite of what we had in the previous test. 
+
+\section{Conclusions} \label{conclusions}
+We have shown some preliminary results on the scheduling produced by CAP-PFB
+when applied on uniform and AMR meshes. On uniform meshes, CAP-PFB was shown to
+find an optimal scheduling. On AMR meshes, successive scheduling produced by
+CAP-PFB do not lead monotonically to better scheduling. A simple method to
+suppress the oscillations has been proposed and the importance of the initial
+sweeping order was highlighted. Using a good initial sweeping order not only
+produces a better final sweeping order but the convergence is smoothed. Future
+works, include using CAP-PFB for real 2D and 3D applications and to study
+different initial sweep ordering.
+
+
+\bibliographystyle{unsrt}
+\bibliography{database}
+
+\end{document}
+
+In the last case studied for this test, we do not allow for oscillations. If a
+backward iteration, resp. forward iteration, produces a sweep worse than the
+previous sweep, that sweep is disregarded and the best sweep is used in the
+following forward iteration, resp. backward iteration. The results are shown in 
+\Cref{amr_3}.
+% Order of results: no seed, seed = 0, seed = 1.
+% Table for new_amr_1 and new_amr_3 = refined mesh in the middle have been gather
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      N.procs & Init. n. stages & Final n. stages & Iter. \\
+      \hline
+      148 & 2760 & 238 & 3 \\
+      148 & 804  & 250 & 2 \\
+      148 & 788  & 249 & 2 \\
+      592 & 5520 & 332 & 3 \\
+      592 & 1402 & 351 & 3 \\
+      592 & 1364 & 337 & 6 \\
+      \hline
+    \end{tabular}
+    \caption{Number of stages required to sweep through a mesh refined in the
+      middle of the domain after gathering of the tasks without oscillations
+    allowed.}
+    \label{amr_3}
+  \end{center}
+\end{table}
+There are three cases where the best scheduling is obtained after a
+non-monotonic decrease, in one of them the best scheduling is obtained with the
+new method. In the other two cases, the solution is the best scheduling obtained
+in during the monotone phase. The convergence at 249 is a false convergence due
+to the fact that two iterations in a row we get the same number of stages.
+
+
+In \Cref{band_3}, we show the results when oscillations are not allowed.
 
 \begin{table}[H]
   \begin{center}
@@ -506,21 +562,3 @@ processors which is the opposite of what we had in the previous test. In
 We can see that using the proposed method, we get slightly better results than a
 method which would stop as soon as scheduling is not better than the one obtain
 at the previous iteration.
-
-\section{Conclusions} \label{conclusions}
-We have shown some preliminary results on the scheduling produced by CAP-PFB
-when applied on uniform and AMR meshes. On uniform meshes, CAP-PFB was shown to
-find an optimal scheduling. On AMR meshes, successive scheduling produced by
-CAP-PFB do not lead monotonically to better scheduling. A simple method to
-suppress the oscillations has been proposed and the importance of the initial
-sweeping order was highlighted. Using a good initial sweeping order not only
-produces a better final sweeping order but the convergence is smoothed. Future
-works, include using CAP-PFB for real 2D and 3D applications and to study
-different initial sweep ordering.
-
-
-\bibliographystyle{unsrt}
-\bibliography{database}
-
-\end{document}
-

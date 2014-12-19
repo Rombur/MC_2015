@@ -12,7 +12,7 @@ iteration = np.array([1.,1.5,2.,2.5,3.,3.5,4.,4.5,5.,5.5,6.,6.5,7.,7.5,8.,8.5,
     9.,9.5,10.,10.5,11.,11.5,12.,12.5,13.,13.5,14.,14.5,15.,15.5,16.,16.5,17.,
     17.5,18.,18.5,19.,19.5,20.])
 
-central_148_1 = np.array([266.,246.,246.,238.,238.,238.,238.,238.,238.,238.,
+central_148_1 = np.array([262.,246.,242.,242.,238.,238.,238.,238.,238.,238.,
     238.,238.,238.,238.,238.,238.,238.,238.,238.,238.,238.,238.,238.,238.,
     238.,238.,238.,238.,238.,238.,238.,238.,238.,238.,238.,238.,238.,238.,
     238.])
@@ -20,24 +20,30 @@ central_148_2 = np.array([269.,254.,250.,250.,250.,253.,250.,253.,250.,253.,
     250.,253.,250.,253.,250.,253.,250.,253.,250.,253.,250.,253.,250.,253.,
     250.,253.,250.,253.,250.,253.,250.,253.,250.,253.,250.,253.,250.,253.,
     250.])
-central_148_3 = np.array([267.,259.,253.,249,250.,247.,244.,247.,244.,246.,
+central_148_3 = np.array([267.,259.,253.,249.,250.,247.,244.,247.,244.,246.,
     246.,247.,244.,246.,244.,246.,244.,246.,244.,246.,244.,246.,244.,246.,
     244.,246.,244.,246.,244.,246.,244.,246.,244.,246.,244.,246.,244.,246.,
     244.])
+central_148_4 = np.array([279.,260.,259.,253.,256.,252.,257.,252.,252.,252.,
+    252.,252.,252.,252.,252.,252.,252.,252.,252.,252.,252.,252.,252.,252.,
+    252.,252.,252.,252.,252.,252.,252.,252.,252.,252.,252.,252.,252.,252.,
+    252.])
                                          
 pylab.figure(1)
 pylab.plot(iteration,central_148_1,color='blue',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.plot(iteration,central_148_2,color='red',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.plot(iteration,central_148_3,color='green',linewidth=2.,linestyle='-',marker='D',markersize=7)
+pylab.plot(iteration,central_148_4,color='black',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.xlim(1,20)
 pylab.xlabel('Number of iterations')
 pylab.ylabel('Number of stages')
+pylab.legend(['serial','random1','random2','iDFDS'])
 pylab.xticks(np.linspace(1,20,20,endpoint=True))
 pylab.savefig('convergence_central_148.png')
 
 #----------------------------------------------------------------------------#
 
-central_592_1 = np.array([352.,340.,336.,336.,332.,332.,332.,332.,332.,332.,
+central_592_1 = np.array([360.,344.,336.,332.,332.,332.,332.,332.,332.,332.,
     332.,332.,332.,332.,332.,332.,332.,332.,332.,332.,332.,332.,332.,332.,
     332.,332.,332.,332.,332.,332.,332.,332.,332.,332.,332.,332.,332.,332.,
     332.])
@@ -49,14 +55,21 @@ central_592_3 = np.array([387.,368.,359.,352.,348.,347.,343.,342.,342.,337.,
     340.,337.,340.,336.,336.,332.,337.,332.,337.,332.,337.,332.,337.,332.,
     337.,332.,337.,332.,337.,332.,337.,332.,337.,332.,337.,332.,337.,332.,
     337.])
+central_592_4 = np.array([552.,475.,379.,365.,363.,349.,352.,348.,352.,348.,
+    352.,348.,352.,348.,352.,348.,352.,348.,352.,348.,352.,348.,352.,348.,
+    352.,348.,352.,348.,352.,348.,352.,348.,352.,348.,352.,348.,352.,348.,
+    352.])
 
 pylab.figure(2)
 pylab.plot(iteration,central_592_1,color='blue',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.plot(iteration,central_592_2,color='red',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.plot(iteration,central_592_3,color='green',linewidth=2.,linestyle='-',marker='D',markersize=7)
+pylab.plot(iteration,central_592_4,color='black',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.xlim(1,20)
+pylab.ylim(320,410)
 pylab.xlabel('Number of iterations')
 pylab.ylabel('Number of stages')
+pylab.legend(['serial','random1','random2','iDFDS'])
 pylab.xticks(np.linspace(1,20,20,endpoint=True))
 pylab.savefig('convergence_central_592.png')
 
