@@ -1,9 +1,23 @@
-\documentclass[letterpaper]{article}
+\documentclass{mc2015}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[T1]{fontenc}         % Use T1 encoding instead of OT1
+\usepackage[utf8]{inputenc}      % Use UTF8 input encoding
+\usepackage{microtype}           % Improve typography
+\usepackage{booktabs}            % Publication quality tables
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[exponent-product=\cdot]{siunitx}
+\usepackage[colorlinks,breaklinks]{hyperref}
+\hypersetup{linkcolor=black, citecolor=black, urlcolor=black}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{lipsum}
 \usepackage{amsmath}
 \usepackage{array}
 \usepackage{color}
-\usepackage{graphicx}
-\usepackage{float} % utiliser H pour forcer a mettre l'image ou on veut
+%\usepackage{graphicx}
+%\usepackage{float} % utiliser H pour forcer a mettre l'image ou on veut
 \usepackage{lscape} % utilisation du mode paysage
 \usepackage{mathbbol} % permet d'avoir le vrai symbol pour les reels grace a mathbb
 \usepackage{enumerate} % permet d'utiliser enumerate
@@ -12,7 +26,7 @@
 \usepackage[noabbrev]{cleveref} % permet d'utiliser Cref and Cref
 \usepackage{caption} % permet d'utiliser subcaption
 \usepackage{subcaption} % permet d'utiliser subfigure, subtable, etc
-\usepackage[margin=1.in]{geometry} % controle les marges du document
+%\usepackage[margin=1.in]{geometry} % controle les marges du document
 \usepackage{algorithm}
 \usepackage{url}
 
@@ -34,35 +48,53 @@
 \renewcommand{\[}{\left[}
 \renewcommand{\]}{\right]}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Insert authors' names and short version of title in lines below
+
+\authorHead{Bruno Turcksin}
+\shortTitle{Parallel $S_n$ Sweeps on Adapted Mesh}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 \title{Parallel $S_n$ Sweeps on Adapted Mesh}
 \author{Bruno Turcksin} 
-\date{}
+\affil{Department of Mathematics \\
+  Texas A\&M University \\
+  3133 TAMU, College Station, TX 77843-3133 \\
+  turcksin@math.tamu.edu
+}
+
 \maketitle
 
 \begin{abstract}
-  In this paper, we study parallel sweeps on adaptively refined meshes. Unlike
-  for regular grids, there is no known optimal parallel sweeps on unstructured
-  mesh. Here, we study the CAP-PFB (Cut Arc Preference - Parallel Forward
-  Backward) algorithm on regular grids and adapted meshes. First, we recall the
-  CAP-PFB heuristic, then we explain how it can be used on adapted mesh. We show that on
-  regular grids, CAP-PFB finds an optimal sweep independently of the initial
-  sweep. On adapted meshes, the best results are obtained when using a serial
-  initial sweep for CAP-PFB. This is somewhat unexpected that a ``better''
-  initial sweep lead to a worse result. Our results show that a good initial
-  sweep should take into account the interaction of sweeps along different
-  directions.
+  We study parallel sweeps on adaptively refined meshes. Unlike on regular
+  grids, there is no known optimal parallel sweeps on unstructured mesh and
+  thus, multiple heuristics have been proposed over the years. In this paper, we
+  study the CAP-PFB (Cut Arc Preference - Parallel Forward Backward) algorithm
+  on regular grids and adaptively refined meshes. We begin by recalling the
+  CAP-PFB heuristic, then we explain how it can be applied on adapted meshes.
+  After that, we compare the sweeps produced by different initial sweeps on
+  regular and adapted meshes. We show that on regular grids, CAP-PFB finds an
+  optimal sweep independently of the initial sweep used. On adapted meshes, the
+  best results are obtained when using a serial initial sweep for CAP-PFB. This
+  is somewhat unexpected that the ``worst'' initial sweep lead to the best
+  result. We conclude that a good initial sweep for CAP-PFB should take into
+  account the interaction of sweeps along different directions before trying to
+  minimize the number of stages.
+
+  \emph{Key Words}: transport sweeps, parallel transport, AMR
 \end{abstract}
 
 % In the paper, they gave a weight of 1/3 instead of zero to the arcs between
 % two different processors.
 \section{Introduction}
+
 When discretizing the angular variable of the transport equation with the
 discrete ordinates method, it is usually necessary to perform multiple transport
 sweeps through the mesh. A transport sweep (or simply a sweep for short)
 directly inverts the steaming-plus-collision operator of the transport equation,
-i.e., it solve for every angle:
+i.e., it solves for every angle:
 \begin{equation}
   \bo_m\cdot\bn\Psi_{m,g}^{(k+1)}+\sigma_{t,g}\Psi_{m,g}^{(k+1)} =
   q_{m,g}^{(k)}
@@ -104,12 +136,12 @@ of cells.
 
 When studying sweeping algorithms, it is also necessary to study the
 partitioning of the mesh. Two identical meshes partitioned differently will lead
-to different optimal scheduling. Therefore, to obtain the best speed up given a
+to different optimal scheduling. Therefore, to obtain the best speed up, given a
 mesh and a number of processors, the sweeping algorithm and the partitioning
 should be studied together. However, here we will assume that the
 partitioning is given. This is representative of the case where the partitioning
 is done by a third-party library or when the partitioning cannot be tailored for
-the transport equation because others physics must be accounted for. In
+the transport equation because other physics must be accounted for. In
 \cite{Adams2013}, a family of optimal sweeping algorithms is described for
 regular grids. For unstructured grids, several heuristics have been proposed
 over the years
@@ -127,23 +159,24 @@ uses the p4est library for the partitioning. The rest of this paper is organized
 as follows: in \Cref{parallel_sweeps}, we explain the CAP-PFB algorithm
 introduced in \cite{Mo2014} and we show how to apply it to adapted meshes. In
 \Cref{results}, we compare the results obtained with CAP-PFB using different
-initial sweeps, first on an uniform mesh where the optimal solution is known
-\cite{Adams2013} and then, on meshes more typical of what is obtained using AMR.
+initial sweeps, on uniform meshes where the optimal solution is known
+\cite{Adams2013} and on meshes more typical of what is obtained using AMR.
 We end with our conclusions in \Cref{conclusions}.
 
 
 \section{Parallel sweeps on AMR mesh} \label{parallel_sweeps}
 
 \subsection{CAP-PFB algorithm}
+
 In this Section, we explain the CAP-PFB (Cut Arc Preference - Parallel Forward
 Backward) algorithm introduced in \cite{Mo2014}. We will start with the general
 Forward-Backward (FB) algorithm \cite{Li1992}. This algorithm has been developed
 to schedule a set of tasks given dependencies between the tasks and constraints
 on the resources. It is based on the observation that when we try to execute the
 tasks as soon as possible, a lot of work is done at the beginning of the
-schedule but it quickly decreases and there is only few tasks to perform later
-on. The opposite is true when we try to execute the tasks as late as possible,
-few tasks are performed at the beginning but a lot of them are done at the end
+schedule but it quickly decreases to only few tasks later
+on. The opposite is true when we try to execute the tasks as late as possible;
+few tasks are performed at the beginning but a lot are done at the end
 of the schedule. The idea beyond the FB algorithm is to alternate a phase where the
 tasks are scheduled as late as possible (backward iteration) with a phase where the
 tasks are scheduled as early as possible (forward iteration)\footnote{The
@@ -177,8 +210,9 @@ follow:
 \end{algorithm}
 Different FB algorithms will differ by the method used to compute the ranks of the tasks. The
 Cut Arc Preference (CAP) method uses DAG to represent the dependency of the
-tasks and computes the ranks of the tasks using the cut arcs of the graph. Cut arcs are arcs between tasks 
-owned by different processors. The ranks are computed as follows:
+tasks and computes the ranks of the tasks using the cut arcs of the graph. Cut
+arcs are arcs between tasks owned by different processors. The ranks are
+computed as follows:
 \begin{description}
   \item[Backward iteration:] the rank of a task is the earliest start time of all its downstream tasks
     owned by a different processor. Tied are broken using the task own start time.
@@ -190,10 +224,12 @@ owned by different processors. The ranks are computed as follows:
 PFB works exactly like FB but it assumes that the tasks are distributed among processors.
 
 \subsection{CAP-PFB on adapted mesh}
+
 In \Cref{subdomain_id}, we show a mesh and its partitioning generated by deal.II and p4est 
 on 16 processors. This is a typical mesh produced by these libraries and it is
 representative of the case that we want to tackle (the problem solved here is a
 simple Laplace equation but the mesh and the partition are rather typical). 
+
 \begin{figure}[H]
   \begin{subfigure}[b]{.5\textwidth}
     \centering
@@ -208,6 +244,7 @@ simple Laplace equation but the mesh and the partition are rather typical).
   \caption{Partitioning and mesh using 16 processors (Step-40 of deal.II).}
   \label{subdomain_id}
 \end{figure}
+
 We can see in \Cref{subdomain_id} that the domain owned by each processor is not
 convex and that some
 processors own disjoint domains. In \cite{Mo2014}, the authors studied CAP-PFB
@@ -218,7 +255,7 @@ tasks that are associated to only one cell. However, this will create an
 excessive amount of communication between processors which will negatively impact the performance
 \cite{Pautz2002}. Therefore, it is necessary to have tasks that own more than
 one cell. On a totally unstructured mesh, gathering cells to form convex zones
-can be a hard problem. However, this can be easily done on an AMR mesh since the
+can be a difficult problem. However, this can be easily done on an AMR mesh since the
 children of a coarse cell can be gather to form a convex zone, i.e. the parent
 cell. It is of course necessary that all the children are owned by the same
 processor. Otherwise, a task would span over multiple processors and
@@ -233,9 +270,10 @@ the number of stages, i.e. the number of steps needed to sweep through the mesh,
 of successive scheduling oscillates.
 
 \subsection{Initial sweeps}
+
 In the next Section, we will compare the results of CAP-PFB using different initial sweeps:
 \begin{description}
-  \item[serial:] this sweep is the same as a serial sweep, we sweep through the
+  \item[serial:] this sweep is the same as a serial sweep. We sweep through the
     mesh one
     direction at the time and at any given time only one task is executed. We
     will refer to it as \emph{serial}.
@@ -244,32 +282,42 @@ In the next Section, we will compare the results of CAP-PFB using different init
   \item[interleaved DFDS:] this sweep is defined in \cite{Pautz2002}. We will
     refer to it as \emph{iDFDS}. This heuristic prioritizes tasks that have
     downstream tasks on other processors. It is important to note that this algorithm was
-    developed to deal with number of tasks much larger than what we will look
-    use in the next Section.
+    developed to deal with number of tasks much larger than what the tests in
+    the next Section use.
 \end{description}
 
 \section{Results} \label{results}
-In this Section, we look at the number of stages produced by the CAP-PFB
+
+In this Section, we examine the number of stages produced by the CAP-PFB
 heuristic. In the first test, we compare the sweeps produced by CAP-PFB
-with the optimal solution on an uniform mesh. In the second and third tests, we
+with the optimal solution on a uniform mesh. In the second and third tests, we
 look at the scheduling on AMR meshes. In all the tests, the domain is square and
 we use a $S_8$ quadrature, i.e. 40 directions. 20 CAP-PFB iterations will be
 performed for each initial sweep.
 
 \subsection{Uniform mesh}
-In this test, we compare the number of stages on an uniform two-dimensional mesh 
+
+In this test, we compare the number of stages on a uniform two-dimensional mesh 
 where each processors owns 40 tasks (one task for each direction). In this
 setup, the optimal number of stages is given by \cite{Adams2013}:
 \begin{equation}
   \mu = P_x + P_y - 4 + N_{\textrm{tasks}},
 \end{equation}
-with $P_x \times P_y$ the process grid and $N_{\textrm{tasks}}$ the number of
+\noindent with $P_x \times P_y$ the process grid and $N_{\textrm{tasks}}$ the number of
 tasks that each processors has to execute. In \Cref{uniform}, we compare the number of
 stages obtained using CAP-PFB to the optimal solution for different number of
 processors.
+
 % Order of results: no seed, seed = 0, seed = 1.
 \begin{table}[H]
   \begin{center}
+    \caption{Number of stages required to sweep through an uniform mesh.
+      \emph{N. procs} is the number of processors ($P_x \times P_y$), \emph{Init. sweep} is the
+      method used to produce the initial sweep, \emph{Init. n. stages} is the
+      number of stages of the initial sweep, \emph{Best n. stages} is the
+      number of stages of the best sweep computed, \emph{Optimal n. stages} is the
+      number of stages of the optimal sweep, and \emph{Iter.} is the number
+    of CAP-FBS iterations performed to reach \emph{Best n. stages}.}
     \begin{tabular}{|c|c|c|c|c|c|}
       \hline
       N. procs & Init. sweep & Init. n. stages & Best n. stages & Optimal n. stages & Iter. \\
@@ -288,39 +336,38 @@ processors.
       $50\times 50$ & \emph{iDFDS}   &    136 & 136 & 136 & 0 \\
       \hline
     \end{tabular}
-    \caption{Number of stages required to sweep through an uniform mesh.
-      \emph{N. procs} is the number of processors ($P_x \times P_y$), \emph{Init. sweep} is the
-      method used to produce the initial sweep, \emph{Init. n. stages} is the
-      number of stages of the initial sweep, \emph{Best n. stages} is the
-      number of stages of the best sweep computed, \emph{Optimal n. stages} is the
-      number of stages of the optimal sweep, and \emph{Iter.} is the number
-    of CAP-FBS iterations performed to reach \emph{Best n. stages}.}
     \label{uniform}
   \end{center}
 \end{table}
+
 We can see that the heuristic converges to the optimal solution in only one or
 two iterations for every initial sweep except for \emph{iDFDS}. \emph{iDFDS} 
 finds the optimal scheduling without CAP-PFB. Even though the number of stages is
-identical, the final scheduling obtained using different initial sweeps are
+identical, the sweeps obtained using different initial sweeps are
 different.
 
 \subsection{First AMR test}
+
 In this test, the cells in the middle of the domain are refined (\Cref{mesh_1}).
 The red squares represent processors and the black squares represent cells
 or sets of cells. 40 tasks, each one requiring one unit of work, are
-associated to each black square.
+associated with each black square.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=5cm]{mesh}
   \caption{Mesh refined in the middle of the domain.}
   \label{mesh_1}
 \end{figure}
+
 First, we test the case where each processors owns 160 tasks (\Cref{amr_1}). For
-this mesh the optimal number of stages is not know but we can have an idea of
+this mesh the optimal number of stages is not know but we can obtained an
+estimate of
 the minimal number stages by counting the minimum number of stages before the
 central processors can start working ($N_{fill}$) and the number of tasks own by
 each of the central processors. In this case, we get: the minimal numbers of stages
 (\emph{Minimal n. stages}) equals $2\times N_{fill}+N_{tasks}$ \cite{Adams2013}.
+
 % N_{fill} = 30
 % N_{tasks} = 160
 % N_{fill} = 65
@@ -329,6 +376,8 @@ each of the central processors. In this case, we get: the minimal numbers of sta
 % Table for amr_0 = refined mesh in the middle have NOT been gather
 \begin{table}[H]
   \begin{center}
+    \caption{Number of stages required to sweep through a mesh refined
+    in the middle of the domain.}
     \begin{tabular}{|c|c|c|c|c|c|}
       \hline
       N.procs & Init. sweep & Init. n. stages & Best n. stages & Minimal n. stages & Iter. \\
@@ -343,19 +392,18 @@ each of the central processors. In this case, we get: the minimal numbers of sta
       592 &   \emph{iDFDS} &   778 & 332 & 290 & 10 \\
       \hline
     \end{tabular}
-    \caption{Number of stages required to sweep through a mesh refined
-    in the middle of the domain.}
     \label{amr_1}
   \end{center}
 \end{table}
+
 Different initial sweeps lead to improved sweeps requiring different number of
-stages, the best results are obtained for \emph{serial}. This is because
+stages; the best results are obtained for \emph{serial}. This is because
 \emph{serial} goes through the mesh along one direction at the time. In the
-others cases, the sweep can stall at the beginning because tasks on the corners
+other cases, the sweep can stall at the beginning because tasks on the corners
 of the domain are executed first and the others processors are idle for a longer
 time. The sensitivity of the algorithm to the initial sweep is due to the fact
 that the order of tasks that have the same ranks cannot be changed. This allows
-to make sure that the precedence relationships are always satisfied without
+to the precedence relationships to always be satisfied without
 having to check them during CAP-PFB iterations. It is interesting to note that
 starting with a good initial sweep does not give to the best results.
 \emph{iDFDS} gives a much better starting point than \emph{serial} but the final
@@ -367,10 +415,13 @@ be executed, but 40 tasks, each requiring four units of work. We
 can compute the minimum number of stages by taking into account that some tasks
 in $N_{fill}$ and $N_{tasks}$ require four units of work instead of one. The
 results are presented in \Cref{amr_2}.
+
 % Order of results: no seed, seed = 0, seed = 1.
 % Table for amr_1 and amr_3 = refined mesh in the middle have been gather
 \begin{table}[H]
   \begin{center}
+    \caption{Number of stages required to sweep through a mesh refined in the
+      middle of the domain after gathering of the tasks in the refined area.}
     \begin{tabular}{|c|c|c|c|c|c|}
       \hline
       N.procs & Init. sweep & Init. n. stages & Best n. stages & Minimal n. stages & Iter. \\
@@ -385,8 +436,6 @@ results are presented in \Cref{amr_2}.
       592 &   \emph{iDFDS} &   726 & 348 & 332 &  5 \\
       \hline
     \end{tabular}
-    \caption{Number of stages required to sweep through a mesh refined in the
-      middle of the domain after gathering of the tasks in the refined area.}
     \label{amr_2}
   \end{center}
 \end{table}
@@ -400,12 +449,13 @@ which is by far the best initial schedule.
 as a function of the number of CAP-PFB iterations when the tasks are gathered (when the
 tasks are not gathered CAP-PFB converges monotonically). When 148 processors are
 used, after the initial oscillations, CAP-PFB either converges or oscillates
-around the best scheduling. When 592 processors are used, there is once case
+around the best scheduling. When 592 processors are used, there is one case
 where the best scheduling is reached before a plateau of worse sweeps. This
 indicates that we need to monitor the successive sweeps produced by the
 heuristic instead of simply using the ordering produced when the algorithm seems
 to converge. \emph{serial} converges smoothly and is faster to converge than the
 other sweeps.
+
 \begin{figure}[H]
   \begin{subfigure}[b]{.5\textwidth}
     \centering
@@ -425,7 +475,8 @@ other sweeps.
 
 
 \subsection{Second AMR test}
-In this test, the mesh is given by \Cref{mesh_2}. Once the gathering of tasks is
+
+In this test, the mesh is given in \Cref{mesh_2}. Once the gathering of tasks is
 done, each processor owns tasks that require one unit of work and tasks that
 require four units of work.
 \begin{figure}[H]
@@ -436,10 +487,12 @@ require four units of work.
 \end{figure}
 
 First, we test the case where each processor owns 400 tasks (see \Cref{band_1}).
-We compute the minimal number of stages in the same way than the previous subsection. Because
+We compute the minimal number of stages in the same way as in the previous subsection. Because
 the lack of symmetry of the problem, it is not obvious that this number can be reached.
+
 \begin{table}[H]
   \begin{center}
+    \caption{Number of stages required to sweep through an adapted mesh.}
     \begin{tabular}{|c|c|c|c|c|c|}
       \hline
       N.procs & Init. sweep & Init. n. stages & Best n. stages & Minimal n. stages & Iter. \\
@@ -454,7 +507,6 @@ the lack of symmetry of the problem, it is not obvious that this number can be r
       $20 \times 20$ &   \emph{iDFDS} &   1851 & 1109 & 616 & 11 \\
       \hline
     \end{tabular}
-    \caption{Number of stages required to sweep through an adapted mesh.}
     \label{band_1}
   \end{center}
 \end{table}
@@ -462,8 +514,11 @@ the lack of symmetry of the problem, it is not obvious that this number can be r
 Once again \emph{serial} gives the best results. \emph{iDFDS} performs
 significantly worse than the other sweeps. In \Cref{band_2}, we show the results
 when each processor owns 160 tasks.
+
 \begin{table}[H]
   \begin{center}
+    \caption{Number of stages required to sweep through an adapted mesh after
+    gathering of the tasks associated to the refine cells.}
     \begin{tabular}{|c|c|c|c|c|c|}
       \hline
       N.procs & Init. sweep & Init. n. stages & Best n. stages & Minimal n. stages & Iter. \\
@@ -478,15 +533,14 @@ when each processor owns 160 tasks.
       $20 \times 20$ &   \emph{iDFDS} &   2290 &  898 & 652 & 14 \\
       \hline
     \end{tabular}
-    \caption{Number of stages required to sweep through an adapted mesh after
-    gathering of the tasks associated to the refine cells.}
     \label{band_2}
   \end{center}
 \end{table}
 
 \emph{iDFDS} performs much better than in the previous case. \emph{serial} is
-pretty much unaffected by the gathering but the number of stages is not optimal.
+almost unaffected by the gathering but the number of stages is not optimal.
 In \Cref{convergence_band}, we show the convergence of CAP-PFB. 
+
 \begin{figure}[H]
   \begin{subfigure}[b]{.5\textwidth}
     \centering
@@ -513,22 +567,29 @@ more smoothly than the other methods (\emph{iDFDS} oscillations cannot be seen
 on this plot).
 
 \section{Conclusions} \label{conclusions}
-In this paper, we have recalled the CAP-PFB algorithm and we have shown how the
-sweeps it produce, when applied on uniform and AMR meshes, perform. On uniform
-meshes, CAP-PFB was shown to find an optimal sweep independently of the initial
-sweep. On AMR meshes, the heuristic produced different results given different
-initial sweeps but surprisingly, using an initial sweep requiring less stages
-does not give the best results. The \emph{serial} initial sweep outperformed all
-the other initial sweeps and it was able to find the optimal sweep for one of
-the two AMR test cases when the tasks are gathered. These results showed that
-the number of stages of a sweep is not important in the choice of an initial
-sweep for CAP-PFB. When choosing ann initial sweep, the interaction of the
-sweeps along different directions is at least as important as the sweep along each
-direction. Future works include using CAP-PFB for real 2D and 3D applications
-and to study more initial sweeps.
+
+In this paper, we have recalled the CAP-PFB algorithm and we have shown how it
+can be applied on adaptively refined meshes. Then, we compared the sweeps
+produced by CAP-PFB on uniform and adapted meshes using different initial
+sweeps. On uniform meshes, CAP-PFB was shown to find an optimal sweep
+independently of the initial sweep. On AMR meshes, the heuristic produced
+different results given different initial sweeps but surprisingly, using an
+initial sweep requiring less stages does not give the best results. The
+\emph{serial} initial sweep outperformed all the other initial sweeps and it was
+able to find the optimal sweep for one of the two AMR test cases when the tasks
+are gathered. These results showed that the number of stages of a sweep is not
+important in the choice of an initial sweep for CAP-PFB. When choosing an
+initial sweep, the interaction of the sweeps along different directions is at
+least as important as the sweep along each direction. Future works include using
+CAP-PFB for real 2D and 3D applications and to study different initial sweeps.
 
 
-\bibliographystyle{unsrt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\baselineskip}{12pt}
+
+\bibliographystyle{mc2015}
 \bibliography{database}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}
