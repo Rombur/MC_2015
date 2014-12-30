@@ -87,21 +87,27 @@ band_20_20_3 = np.array([733.,684.,669.,634.,631.,617.,608.,594.,601.,595.,
     579.,578.,578.,577.,568.,568.,565.,569.,560.,561.,555.,556.,548.,547.,
     548.,549.,545.,542.,541.,545.,541.,549.,544.,542.,544.,542.,543.,542.,
     536.])
+band_20_20_4 = np.array([1161.,1125.,1113.,1109.,1062.,1063.,991.,968.,972.,
+    964.,932.,920.,920.,910.,899.,850.,837.,776.,732.,688.,633.,612.,607.,
+    571.,572.,565.,563.,561.,561.,562.,562.,565.,561.,558.,555.,556.,553.,
+    557.,553.])
 
 pylab.figure(3)                
 pylab.plot(iteration,band_20_20_1,color='blue',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.plot(iteration,band_20_20_2,color='red',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.plot(iteration,band_20_20_3,color='green',linewidth=2.,linestyle='-',marker='D',markersize=7)
+pylab.plot(iteration,band_20_20_4,color='black',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.xlim(1,20)
 pylab.ylim(520,620)
 pylab.xlabel('Number of iterations')
 pylab.ylabel('Number of stages')
+pylab.legend(['serial','random1','random2','iDFDS'])
 pylab.xticks(np.linspace(1,20,20,endpoint=True))
 pylab.savefig('convergence_band_20_20.png')
 
 #----------------------------------------------------------------------------#
 
-band_40_40_1 = np.array([886.,887.,884.,884.,884.,884.,884.,884.,884.,884.,
+band_40_40_1 = np.array([885.,887.,884.,884.,884.,884.,884.,884.,884.,884.,
     884.,884.,884.,884.,884.,884.,884.,884.,884.,884.,884.,884.,884.,884.,
     884.,884.,884.,884.,884.,884.,884.,884.,884.,884.,884.,884.,884.,884.,
     884.])
@@ -113,14 +119,20 @@ band_40_40_3 = np.array([1103.,1040.,1008.,982.,964.,945.,934.,929.,909.,913.,
     905.,907.,905.,907.,905.,907.,906.,907.,905.,907.,905.,907.,905.,907.,
     906.,907.,906.,907.,906.,907.,906.,907.,906.,907.,906.,907.,905.,907.,
     905.])
+band_40_40_4 = np.array([2112.,1975.,1851.,1757.,1767.,1576.,1554.,1526.,1380.,
+    1336.,1326.,1271.,1244.,1208.,1152.,1119.,1076.,1013.,986.,984.,948.,934.,
+    903.,899.,899.,898.,899.,898.,899.,898.,899.,898.,899.,898.,899.,898.,
+    899.,898.,899.])
 
 pylab.figure(4)                
 pylab.plot(iteration,band_40_40_1,color='blue',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.plot(iteration,band_40_40_2,color='red',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.plot(iteration,band_40_40_3,color='green',linewidth=2.,linestyle='-',marker='D',markersize=7)
+pylab.plot(iteration,band_40_40_4,color='black',linewidth=2.,linestyle='-',marker='D',markersize=7)
 pylab.xlim(1,20)
 pylab.ylim(880,980)
 pylab.xlabel('Number of iterations')
 pylab.ylabel('Number of stages')
+pylab.legend(['serial','random1','random2','iDFDS'])
 pylab.xticks(np.linspace(1,20,20,endpoint=True))
 pylab.savefig('convergence_band_40_40.png')
